@@ -1,0 +1,1 @@
+requestSizeLimit: "10mb" # Your request size limit (20mb, 100kb, ...)

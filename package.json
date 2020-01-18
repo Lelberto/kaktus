@@ -1,0 +1,23 @@
+{
+  "main": "build/app.js",
+  "scripts": {
+    "start": "tsc -p tsconfig.json && node build/app.js"
+  },
+  "dependencies": {
+    "@types/mongoose": "^5.5.41",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.21.2",
+    "mongoose": "^5.8.9",
+    "yaml": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.2",
+    "@types/helmet": "0.0.45",
+    "@types/node": "^13.1.8",
+    "@types/yaml": "^1.2.0"
+  }
+}

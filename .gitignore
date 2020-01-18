@@ -1,0 +1,16 @@
+# Node
+node_modules/
+
+# TypeScript
+build/
+
+# Environment
+.env
+
+# Configuration
+config/*
+!config/*.example.yml
+
+# Visual Studio Code
+.vscode/*
+!.vscode/launch.json

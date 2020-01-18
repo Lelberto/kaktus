@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "esnext",
+        "rootDir": "src/",
+        "outDir": "build/",
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "typeRoots": ["types/"],
+        "strict": true
+    }
+}
