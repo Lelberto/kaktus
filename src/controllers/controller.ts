@@ -1,4 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+import Component from '../component';
+import DatabaseService from '../services/database-service';
+import LogService from '../services/log-service';
 import ServiceContainer from '../services/service-container';
 
 /**
@@ -8,12 +11,13 @@ import ServiceContainer from '../services/service-container';
  * 
  * To create a controller, simply extends this class and register it in the `ControllerService`.
  */
-export default abstract class Controller {
+export default abstract class Controller extends Component {
 
     public readonly rootUri: string;
     public readonly router: Router;
     public readonly endpoints: Endpoint[];
-    protected readonly container: ServiceContainer;
+    protected readonly logger: LogService; // Alias for `this.container.log`
+    protected readonly db: DatabaseService; // Alias for `this.container.db`
 
     /**
      * Creates a new controller.
@@ -22,10 +26,14 @@ export default abstract class Controller {
      * @param rootUri Root URI
      */
     public constructor(container: ServiceContainer, rootUri: string) {
-        this.container = container;
+        super(container);
         this.rootUri = rootUri;
         this.router = Router();
         this.endpoints = [];
+        this.logger = container.log;
+        this.db = container.db;
+
+        this.triggerEndpointHandler = this.triggerEndpointHandler.bind(this);
     }
 
     /**
@@ -56,6 +64,22 @@ export default abstract class Controller {
     }
 
     /**
+     * Send a response.
+     * 
+     * This method must be called instead of `res.status(...).send(...)` because the log service is used to write some informations about the request and the response.
+     * 
+     * @param req Express request
+     * @param res Express response
+     * @param status Status code
+     * @param body Response body
+     */
+    protected async send(req: Request, res: Response, status: number, body: any): Promise<void> {
+        res.status(status).send(body);
+        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name})`, { type: 'endpoints' });
+        this.logger.log(body);
+    }
+
+    /**
      * Logs a message when an endpoint is triggered.
      * 
      * This method is a handler.
@@ -66,7 +90,7 @@ export default abstract class Controller {
      * @async
      */
     private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        console.log(`${req.ip} > ${req.method} ${req.originalUrl}`);
+        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`, { type: 'endpoints' });
         return next();
     }
 }

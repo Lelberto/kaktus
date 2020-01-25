@@ -3,6 +3,7 @@ import ControllerService from './controller-service';
 import DatabaseService from './database-service';
 import EnvironmentService from './environment-service';
 import ExpressService from './express-service';
+import LogService from './log-service';
 import ServerService from './server-service';
 
 /**
@@ -35,6 +36,7 @@ export default class ServiceContainer {
     private _db: DatabaseService | null;
     private _srv: ServerService | null;
     private _config: ConfigurationService | null;
+    private _log: LogService | null;
 
     /**
      * Creates a new services container.
@@ -46,13 +48,14 @@ export default class ServiceContainer {
         this._db = null;
         this._srv = null;
         this._config = null;
+        this._log = null;
         this.env.load(); // Autoload environment
     }
 
     public get env(): EnvironmentService {
         if (!this._env) {
             this._env = new EnvironmentService(this);
-            console.log('Loaded environment service');
+            this.log.log('Loaded environment service', { type: 'service-container' });
         }
         return this._env;
     }
@@ -60,7 +63,7 @@ export default class ServiceContainer {
     public get express(): ExpressService {
         if (!this._express) {
             this._express = new ExpressService(this);
-            console.log('Loaded Express service');
+            this.log.log('Loaded Express service', { type: 'service-container' });
         }
         return this._express;
     }
@@ -68,7 +71,7 @@ export default class ServiceContainer {
     public get controllers(): ControllerService {
         if (!this._controllers) {
             this._controllers = new ControllerService(this);
-            console.log('Loaded controllers service');
+            this.log.log('Loaded controllers service', { type: 'service-container' });
         }
         return this._controllers;
     }
@@ -76,7 +79,7 @@ export default class ServiceContainer {
     public get db(): DatabaseService {
         if (!this._db) {
             this._db = new DatabaseService(this);
-            console.log('Loaded database service');
+            this.log.log('Loaded database service', { type: 'service-container' });
         }
         return this._db;
     }
@@ -84,7 +87,7 @@ export default class ServiceContainer {
     public get srv(): ServerService {
         if (!this._srv) {
             this._srv = new ServerService(this);
-            console.log('Loaded server service');
+            this.log.log('Loaded server service', { type: 'service-container' });
         }
         return this._srv;
     }
@@ -92,8 +95,16 @@ export default class ServiceContainer {
     public get config(): ConfigurationService {
         if (!this._config) {
             this._config = new ConfigurationService(this);
-            console.log('Loaded configuration service');
+            this.log.log('Loaded configuration service', { type: 'service-container' });
         }
         return this._config;
+    }
+
+    public get log(): LogService {
+        if (!this._log) {
+            this._log = new LogService(this);
+            this._log.log('Loaded log service', { type: 'service-container' });
+        }
+        return this._log;
     }
 }

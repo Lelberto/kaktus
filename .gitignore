@@ -11,6 +11,9 @@ build/
 config/*
 !config/*.example.yml
 
+# Logs
+logs/
+
 # Visual Studio Code
 .vscode/*
 !.vscode/launch.json

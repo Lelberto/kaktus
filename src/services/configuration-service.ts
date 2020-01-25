@@ -11,6 +11,7 @@ import ServiceContainer from './service-container';
 export default class ConfigurationService extends Service {
 
     private _api: APIConfiguration | null;
+    private _services: ServicesConfiguration | null;
 
     /**
      * Creates a new configuration service.
@@ -20,6 +21,7 @@ export default class ConfigurationService extends Service {
     public constructor(container: ServiceContainer) {
         super(container);
         this._api = null;
+        this._services = null;
     }
 
     /**
@@ -61,9 +63,17 @@ export default class ConfigurationService extends Service {
     public get api(): APIConfiguration {
         if (!this._api) {
             this._api = this.loadSync<APIConfiguration>('config/api.yml', 'YAML');
-            console.log('Loaded API configuration');
+            this.container.log.log('Loaded API configuration');
         }
         return this._api;
+    }
+
+    public get services(): ServicesConfiguration {
+        if (!this._services) {
+            this._services = this.loadSync<ServicesConfiguration>('config/services.yml', 'YAML');
+            this.container.log.log('Loaded services configuration');
+        }
+        return this._services;
     }
 }
 
@@ -77,4 +87,13 @@ export type ConfigurationType = 'JSON' | 'YAML';
  */
 export interface APIConfiguration {
     requestSizeLimit: string;
+}
+
+/**
+ * Services configuration interface.
+ */
+export interface ServicesConfiguration {
+    log: {
+        dateFormat: string;
+    };
 }
