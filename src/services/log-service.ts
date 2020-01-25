@@ -57,6 +57,7 @@ export default class LogService extends Service {
  */
 export enum LogType {
     LOG = 'logs',
+    SERVICE_CONTAINER = 'service-container',
     ENDPOINTS = 'endpoints'
 }
 
