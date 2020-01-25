@@ -83,7 +83,7 @@ export default abstract class Controller extends Component {
      * @async
      */
     private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        console.log(`${req.ip} > ${req.method} ${req.originalUrl}`);
+        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`);
         return next();
     }
 }

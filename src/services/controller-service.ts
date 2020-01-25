@@ -35,10 +35,10 @@ export default class ControllerService extends Service {
     public registerControllers(app: Application): void {
         this.controllers.forEach(controller => {
             app.use(controller.rootUri, controller.router);
-            console.log(`Registered controller ${controller.constructor.name} - "${controller.rootUri}"`);
+            this.logger.log(`Registered controller ${controller.constructor.name} - "${controller.rootUri}"`);
             controller.endpoints.forEach(endpoint => {
                 const description = (endpoint.description !== undefined) ? ` (${endpoint.description})` : '';
-                console.log(`    - ${endpoint.method} "${controller.rootUri}${endpoint.uri}"${description}`);
+                this.logger.log(`    - ${endpoint.method} "${controller.rootUri}${endpoint.uri}"${description}`);
             });
         });
     }
