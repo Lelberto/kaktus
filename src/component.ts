@@ -10,12 +10,8 @@ import ServiceContainer from './services/service-container';
 export default abstract class Component {
 
     protected readonly container: ServiceContainer;
-    protected readonly logger: LogService; // Alias for `this.container.log`
-    protected readonly db: DatabaseService; // Alias for `this.container.db`
 
     public constructor(container: ServiceContainer) {
         this.container = container;
-        this.logger = container.log;
-        this.db = container.db;
     }
 }

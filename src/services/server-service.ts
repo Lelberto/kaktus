@@ -27,11 +27,11 @@ export default class ServerService extends Service {
 
         // Starting server
         await this.container.express.start(API_PORT as any);
-        this.logger.log('Server started');
+        this.container.log.log('Server started');
 
         // Connecting to database
         await this.container.db.connect(DB_HOST, DB_PORT, DB_NAME);
-        this.logger.log(`Connected to database ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
+        this.container.log.log(`Connected to database ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
     }
 
     /**
@@ -42,10 +42,10 @@ export default class ServerService extends Service {
     public async stop(): Promise<void> {
         // Stopping server
         await this.container.express.stop();
-        this.logger.log('Server stopped');
+        this.container.log.log('Server stopped');
 
         // Disconnecting from database
         await this.container.db.disconnect();
-        this.logger.log('Disconnected from database');
+        this.container.log.log('Disconnected from database');
     }
 }
