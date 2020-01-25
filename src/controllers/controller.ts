@@ -1,4 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+import Component from '../component';
+import LogService from '../services/log-service';
 import ServiceContainer from '../services/service-container';
 
 /**
@@ -8,12 +10,11 @@ import ServiceContainer from '../services/service-container';
  * 
  * To create a controller, simply extends this class and register it in the `ControllerService`.
  */
-export default abstract class Controller {
+export default abstract class Controller extends Component {
 
     public readonly rootUri: string;
     public readonly router: Router;
     public readonly endpoints: Endpoint[];
-    protected readonly container: ServiceContainer;
 
     /**
      * Creates a new controller.
@@ -22,7 +23,7 @@ export default abstract class Controller {
      * @param rootUri Root URI
      */
     public constructor(container: ServiceContainer, rootUri: string) {
-        this.container = container;
+        super(container);
         this.rootUri = rootUri;
         this.router = Router();
         this.endpoints = [];
