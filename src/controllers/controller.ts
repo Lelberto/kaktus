@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
 import Component from '../component';
 import DatabaseService from '../services/database-service';
-import LogService, { LogType } from '../services/log-service';
+import LogService from '../services/log-service';
 import ServiceContainer from '../services/service-container';
 
 /**
@@ -75,7 +75,7 @@ export default abstract class Controller extends Component {
      */
     protected async send(req: Request, res: Response, status: number, body: any): Promise<void> {
         res.status(status).send(body);
-        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name})`, LogType.ENDPOINTS);
+        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name})`, { type: 'endpoints' });
         this.logger.log(body);
     }
 
@@ -90,7 +90,7 @@ export default abstract class Controller extends Component {
      * @async
      */
     private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`, LogType.ENDPOINTS);
+        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`, { type: 'endpoints' });
         return next();
     }
 }

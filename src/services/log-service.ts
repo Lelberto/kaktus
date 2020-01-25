@@ -23,14 +23,13 @@ export default class LogService extends Service {
      * Logs a message in the console and file.
      * 
      * @param msg Message to log
-     * @param type Log type (to write to the desired file)
-     * @param severity Log severity
+     * @param options Log options
      */
-    public async log(msg: any, type: LogType = LogType.LOG, severity: LogSeverity = 'INFO'): Promise<void> {
+    public async log(msg: any, options: LogOptions = { type: 'logs', severity: 'INFO' }): Promise<void> {
         const now = Date.now();
-        const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${typeof msg === 'object' ? JSON.stringify(msg) : msg}`;
+        const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${options.severity != null ? options.severity : 'INFO'}] ${typeof msg === 'object' ? JSON.stringify(msg) : msg}`;
         console.log(fullMsg);
-        await this.write(now, type, fullMsg);
+        await this.write(now, options, fullMsg);
     }
 
     /**
@@ -40,9 +39,9 @@ export default class LogService extends Service {
      * @param type Log type (to write to the desired file)
      * @param msg Log message
      */
-    private async write(date: number, type: LogType, msg: any): Promise<void> {
+    private async write(date: number, options: LogOptions, msg: any): Promise<void> {
         await new Promise((resolve, reject) => {
-            fs.appendFile(`logs/${type}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`, err => {
+            fs.appendFile(`logs/${options.type != null ? options.type : 'logs'}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`, err => {
                 if (err) {
                     return reject(err);
                 }
@@ -53,15 +52,9 @@ export default class LogService extends Service {
 }
 
 /**
- * Log type enum.
+ * Log options.
  */
-export enum LogType {
-    LOG = 'logs',
-    SERVICE_CONTAINER = 'service-container',
-    ENDPOINTS = 'endpoints'
+export interface LogOptions {
+    type?: 'logs' | 'service-container' | 'endpoints';
+    severity?: 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
 }
-
-/**
- * Log severity type.
- */
-export type LogSeverity = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
