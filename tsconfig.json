@@ -7,6 +7,7 @@
         "sourceMap": true,
         "esModuleInterop": true,
         "typeRoots": ["types/"],
-        "strict": true
+        "strict": true,
+        "removeComments": true
     }
 }
