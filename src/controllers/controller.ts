@@ -75,8 +75,8 @@ export default abstract class Controller extends Component {
      */
     protected async send(req: Request, res: Response, status: number, body: any): Promise<void> {
         res.status(status).send(body);
-        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name})`, { type: 'endpoints' });
-        this.logger.log(body);
+        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name}) in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
+        this.logger.log(body, { type: 'endpoints' });
     }
 
     /**
@@ -90,7 +90,9 @@ export default abstract class Controller extends Component {
      * @async
      */
     private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`, { type: 'endpoints' });
+        res.locals.data = {
+            start: Date.now()
+        };
         return next();
     }
 }
