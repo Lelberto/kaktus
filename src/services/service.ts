@@ -1,5 +1,4 @@
 import Component from '../component';
-import LogService from './log-service';
 import ServiceContainer from './service-container';
 
 /**
