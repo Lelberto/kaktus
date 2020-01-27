@@ -34,7 +34,7 @@ export default class ExampleController extends Controller {
      * @param res Express response
      */
     public async helloWorldHandler(req: Request, res: Response): Promise<any> {
-        return await this.send(req, res, 200, {
+        return res.status(200).send({
             message: 'Hello World'
         });
     }
@@ -50,7 +50,7 @@ export default class ExampleController extends Controller {
      * @param res Express response
      */
     public async allControllersHandler(req: Request, res: Response): Promise<any> {
-        return await this.send(req, res, 200, {
+        return res.status(200).send({
             controllers: this.container.controllers.controllers.map(controller => controller.constructor.name)
         });
     }

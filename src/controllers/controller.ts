@@ -64,22 +64,6 @@ export default abstract class Controller extends Component {
     }
 
     /**
-     * Send a response.
-     * 
-     * This method must be called instead of `res.status(...).send(...)` because the log service is used to write some informations about the request and the response.
-     * 
-     * @param req Express request
-     * @param res Express response
-     * @param status Status code
-     * @param body Response body
-     */
-    protected async send(req: Request, res: Response, status: number, body: any): Promise<void> {
-        res.status(status).send(body);
-        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name}) in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
-        this.logger.log(body, { type: 'endpoints' });
-    }
-
-    /**
      * Logs a message when an endpoint is triggered.
      * 
      * This method is a handler.

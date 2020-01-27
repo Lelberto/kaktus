@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import mung from 'express-mung';
 import helmet from 'helmet';
 import { Server } from 'http';
 import Service from './service';
@@ -86,11 +87,17 @@ export default class ExpressService extends Service {
         app.use(helmet());
         app.use(cors());
 
+        // Logging requests and responses
+        app.use(mung.json((body, req, res) => {
+            this.container.log.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
+            this.container.log.log(body, { type: 'endpoints' });
+        }));
+
         // Registering controllers
         this.container.controllers.registerControllers(app);
 
         // handler used when no endpoint matches
-        app.all('*', (req: express.Request, res: express.Response) => {
+        app.all('*', (req, res) => {
             return res.status(404).json({ error: `Unknown endpoint ${req.method} ${req.originalUrl}` });
         });
 
