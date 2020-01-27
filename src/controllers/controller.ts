@@ -68,6 +68,6 @@ export default abstract class Controller extends Component {
 export interface Endpoint {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     uri: string;
-    handlers: RequestHandler[];
+    handlers: RequestHandler | RequestHandler[];
     description?: string;
 }
