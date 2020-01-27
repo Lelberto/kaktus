@@ -32,8 +32,6 @@ export default abstract class Controller extends Component {
         this.endpoints = [];
         this.logger = container.log;
         this.db = container.db;
-
-        this.triggerEndpointHandler = this.triggerEndpointHandler.bind(this);
     }
 
     /**
@@ -46,38 +44,21 @@ export default abstract class Controller extends Component {
         switch (endpoint.method) {
             default:
             case 'GET':
-                this.router.get(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.get(endpoint.uri, endpoint.handlers);
                 break;
             case 'POST':
-                this.router.post(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.post(endpoint.uri, endpoint.handlers);
                 break;
             case 'PUT':
-                this.router.put(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.put(endpoint.uri, endpoint.handlers);
                 break;
             case 'PATCH':
-                this.router.patch(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.patch(endpoint.uri, endpoint.handlers);
                 break;
             case 'DELETE':
-                this.router.delete(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.delete(endpoint.uri, endpoint.handlers);
                 break;
         }
-    }
-
-    /**
-     * Logs a message when an endpoint is triggered.
-     * 
-     * This method is a handler.
-     * 
-     * @param req Express request
-     * @param res Express response
-     * @param next Next handler
-     * @async
-     */
-    private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        res.locals.data = {
-            start: Date.now()
-        };
-        return next();
     }
 }
 

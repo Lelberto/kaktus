@@ -87,7 +87,15 @@ export default class ExpressService extends Service {
         app.use(helmet());
         app.use(cors());
 
-        // Logging requests and responses
+        // Set response locals
+        app.use((req, res, next) => {
+            res.locals.data = {
+                start: Date.now()
+            };
+            return next();
+        });
+
+        // Logging request and response
         app.use(mung.json((body, req, res) => {
             this.container.log.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
             this.container.log.log(body, { type: 'endpoints' });
