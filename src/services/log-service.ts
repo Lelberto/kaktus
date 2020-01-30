@@ -40,6 +40,19 @@ export default class LogService extends Service {
      * @param msg Log message
      */
     private async write(date: number, options: LogOptions, msg: any): Promise<void> {
+        // Creates the logs directory if not exists
+        await new Promise((resolve, reject) => {
+            if (!fs.existsSync('logs')) {
+                fs.mkdir('logs', (err) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve();
+                });
+            }
+        });
+
+        // Write logs
         await new Promise((resolve, reject) => {
             fs.appendFile(`logs/${options.type != null ? options.type : 'logs'}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`, err => {
                 if (err) {
