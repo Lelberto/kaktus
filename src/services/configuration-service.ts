@@ -63,7 +63,7 @@ export default class ConfigurationService extends Service {
     public get api(): APIConfiguration {
         if (!this._api) {
             this._api = this.loadSync<APIConfiguration>('config/api.yml', 'YAML');
-            this.container.log.log('Loaded API configuration');
+            this.container.log.info('Loaded API configuration');
         }
         return this._api;
     }
@@ -71,7 +71,7 @@ export default class ConfigurationService extends Service {
     public get services(): ServicesConfiguration {
         if (!this._services) {
             this._services = this.loadSync<ServicesConfiguration>('config/services.yml', 'YAML');
-            this.container.log.log('Loaded services configuration');
+            this.container.log.info('Loaded services configuration');
         }
         return this._services;
     }

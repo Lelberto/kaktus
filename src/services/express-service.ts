@@ -97,8 +97,8 @@ export default class ExpressService extends Service {
 
         // Logging request and response
         app.use(mung.json((body, req, res) => {
-            this.container.log.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
-            this.container.log.log(body, { type: 'endpoints' });
+            this.container.log.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
+            this.container.log.info(body, { type: 'endpoints' });
         }));
 
         // Registering controllers
