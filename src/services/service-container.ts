@@ -5,6 +5,7 @@ import EnvironmentService from './environment-service';
 import ExpressService from './express-service';
 import LogService from './log-service';
 import ServerService from './server-service';
+import TokenService from './token-service';
 
 /**
  * Services container class.
@@ -37,6 +38,7 @@ export default class ServiceContainer {
     private _srv: ServerService | null;
     private _config: ConfigurationService | null;
     private _log: LogService | null;
+    private _tokens: TokenService | null;
 
     /**
      * Creates a new services container.
@@ -49,6 +51,7 @@ export default class ServiceContainer {
         this._srv = null;
         this._config = null;
         this._log = null;
+        this._tokens = null;
         this.env.load(); // Autoload environment
     }
 
@@ -106,5 +109,13 @@ export default class ServiceContainer {
             this._log.info('Loaded log service', { type: 'service-container' });
         }
         return this._log;
+    }
+
+    public get tokens(): TokenService {
+        if (!this._tokens) {
+            this._tokens = new TokenService(this);
+            this.log.info('Loaded tokens service', { type: 'service-container' });
+        }
+        return this._tokens;
     }
 }
