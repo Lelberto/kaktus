@@ -19,8 +19,8 @@ export default class ExampleController extends Controller {
         super(container, '/example');
         this.helloWorldHandler = this.helloWorldHandler.bind(this); // Bind to get "this" keyword operational
         this.allControllersHandler = this.allControllersHandler.bind(this); // Bind to get "this" keyword operational
-        this.registerEndpoint({ method: 'GET', uri: '/helloworld', handlers: [this.helloWorldHandler], description: 'Hello World message' }); // Register endpoint
-        this.registerEndpoint({ method: 'GET', uri: '/controllers', handlers: [this.allControllersHandler], description: 'Gets all registered controllers names' }); // Register endpoint
+        this.registerEndpoint({ method: 'GET', uri: '/helloworld', handlers: this.helloWorldHandler, description: 'Hello World message' }); // Register endpoint
+        this.registerEndpoint({ method: 'GET', uri: '/controllers', handlers: this.allControllersHandler, description: 'Gets all registered controllers names' }); // Register endpoint
     }
 
     /**
@@ -34,7 +34,7 @@ export default class ExampleController extends Controller {
      * @param res Express response
      */
     public async helloWorldHandler(req: Request, res: Response): Promise<any> {
-        return await this.send(req, res, 200, {
+        return res.status(200).send({
             message: 'Hello World'
         });
     }
@@ -50,7 +50,7 @@ export default class ExampleController extends Controller {
      * @param res Express response
      */
     public async allControllersHandler(req: Request, res: Response): Promise<any> {
-        return await this.send(req, res, 200, {
+        return res.status(200).send({
             controllers: this.container.controllers.controllers.map(controller => controller.constructor.name)
         });
     }

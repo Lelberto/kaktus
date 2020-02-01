@@ -1,5 +1,3 @@
-import DatabaseService from './services/database-service';
-import LogService from './services/log-service';
 import ServiceContainer from './services/service-container';
 
 /**

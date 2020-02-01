@@ -32,8 +32,6 @@ export default abstract class Controller extends Component {
         this.endpoints = [];
         this.logger = container.log;
         this.db = container.db;
-
-        this.triggerEndpointHandler = this.triggerEndpointHandler.bind(this);
     }
 
     /**
@@ -46,52 +44,21 @@ export default abstract class Controller extends Component {
         switch (endpoint.method) {
             default:
             case 'GET':
-                this.router.get(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.get(endpoint.uri, endpoint.handlers);
                 break;
             case 'POST':
-                this.router.post(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.post(endpoint.uri, endpoint.handlers);
                 break;
             case 'PUT':
-                this.router.put(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.put(endpoint.uri, endpoint.handlers);
                 break;
             case 'PATCH':
-                this.router.patch(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.patch(endpoint.uri, endpoint.handlers);
                 break;
             case 'DELETE':
-                this.router.delete(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.delete(endpoint.uri, endpoint.handlers);
                 break;
         }
-    }
-
-    /**
-     * Send a response.
-     * 
-     * This method must be called instead of `res.status(...).send(...)` because the log service is used to write some informations about the request and the response.
-     * 
-     * @param req Express request
-     * @param res Express response
-     * @param status Status code
-     * @param body Response body
-     */
-    protected async send(req: Request, res: Response, status: number, body: any): Promise<void> {
-        res.status(status).send(body);
-        this.logger.log(`${req.ip} > Requested ${req.method} ${req.originalUrl} (${this.constructor.name})`, { type: 'endpoints' });
-        this.logger.log(body);
-    }
-
-    /**
-     * Logs a message when an endpoint is triggered.
-     * 
-     * This method is a handler.
-     * 
-     * @param req Express request
-     * @param res Express response
-     * @param next Next handler
-     * @async
-     */
-    private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        this.logger.log(`${req.ip} > ${req.method} ${req.originalUrl}`, { type: 'endpoints' });
-        return next();
     }
 }
 
@@ -101,6 +68,6 @@ export default abstract class Controller extends Component {
 export interface Endpoint {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     uri: string;
-    handlers: RequestHandler[];
+    handlers: RequestHandler | RequestHandler[];
     description?: string;
 }
