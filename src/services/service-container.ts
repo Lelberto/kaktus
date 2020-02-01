@@ -1,5 +1,6 @@
 import ConfigurationService from './configuration-service';
 import ControllerService from './controller-service';
+import CryptoService from './crypto-service';
 import DatabaseService from './database-service';
 import EnvironmentService from './environment-service';
 import ExpressService from './express-service';
@@ -39,6 +40,7 @@ export default class ServiceContainer {
     private _config: ConfigurationService | null;
     private _log: LogService | null;
     private _tokens: TokenService | null;
+    private _crypto: CryptoService | null;
 
     /**
      * Creates a new services container.
@@ -52,6 +54,7 @@ export default class ServiceContainer {
         this._config = null;
         this._log = null;
         this._tokens = null;
+        this._crypto = null;
         this.env.load(); // Autoload environment
     }
 
@@ -117,5 +120,13 @@ export default class ServiceContainer {
             this.log.info('Loaded tokens service', { type: 'service-container' });
         }
         return this._tokens;
+    }
+
+    public get crypto(): CryptoService {
+        if (!this._crypto) {
+            this._crypto = new CryptoService(this);
+            this.log.info('Loaded crypto service', { type: 'service-container' });
+        }
+        return this._crypto;
     }
 }
