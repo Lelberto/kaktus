@@ -25,13 +25,12 @@ export default class LogService extends Service {
      * @param msg Message to log
      * @param severity Log severity
      * @param options Log options
-     * @async
      */
-    public async log(msg: any, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): Promise<void> {
+    public log(msg: any, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): void {
         const now = Date.now();
         const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${typeof msg === 'object' ? JSON.stringify(msg) : msg}`;
         console.log(fullMsg);
-        await this.write(now, options, fullMsg);
+        this.write(now, options, fullMsg);
     }
 
     /**
@@ -39,10 +38,9 @@ export default class LogService extends Service {
      * 
      * @param msg Message to log
      * @param options Log options
-     * @async
      */
-    public async info(msg: any, options: LogOptions = { type: 'logs' }): Promise<void> {
-        await this.log(msg, 'INFO', options);
+    public info(msg: any, options: LogOptions = { type: 'logs' }): void {
+        this.log(msg, 'INFO', options);
     }
 
     /**
@@ -50,10 +48,9 @@ export default class LogService extends Service {
      * 
      * @param msg Message to log
      * @param options Log options
-     * @async
      */
-    public async warn(msg: any, options: LogOptions = { type: 'logs' }): Promise<void> {
-        await this.log(msg, 'WARN', options);
+    public warn(msg: any, options: LogOptions = { type: 'logs' }): void {
+        this.log(msg, 'WARN', options);
     }
 
     /**
@@ -61,10 +58,9 @@ export default class LogService extends Service {
      * 
      * @param msg Message to log
      * @param options Log options
-     * @async
      */
-    public async error(msg: any, options: LogOptions = { type: 'logs' }): Promise<void> {
-        await this.log(msg, 'ERROR', options);
+    public error(msg: any, options: LogOptions = { type: 'logs' }): void {
+        this.log(msg, 'ERROR', options);
     }
 
     /**
@@ -72,10 +68,9 @@ export default class LogService extends Service {
      * 
      * @param msg Message to log
      * @param options Log options
-     * @async
      */
-    public async debug(msg: any, options: LogOptions = { type: 'logs' }): Promise<void> {
-        await this.log(msg, 'DEBUG', options);
+    public debug(msg: any, options: LogOptions = { type: 'logs' }): void {
+        this.log(msg, 'DEBUG', options);
     }
 
     /**
@@ -84,30 +79,12 @@ export default class LogService extends Service {
      * @param date Date
      * @param type Log type (to write to the desired file)
      * @param msg Log message
-     * @async
      */
-    private async write(date: number, options: LogOptions, msg: any): Promise<void> {
-        // Creates the logs directory if not exists
-        await new Promise((resolve, reject) => {
-            if (!fs.existsSync('logs')) {
-                fs.mkdir('logs', (err) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    return resolve();
-                });
-            }
-        });
-
-        // Write logs
-        await new Promise((resolve, reject) => {
-            fs.appendFile(`logs/${options.type != null ? options.type : 'logs'}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`, err => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve();
-            });
-        });
+    private write(date: number, options: LogOptions, msg: any): void {
+        if (!fs.existsSync('logs')) {
+            fs.mkdirSync('logs');
+        }
+        fs.appendFileSync(`logs/${options.type != null ? options.type : 'logs'}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`);
     }
 }
 
