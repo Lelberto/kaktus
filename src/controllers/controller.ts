@@ -63,11 +63,25 @@ export default abstract class Controller extends Component {
 }
 
 /**
+ * Method type.
+ */
+export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+/**
  * Endpoint interface.
  */
 export interface Endpoint {
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+    method: Method;
     uri: string;
     handlers: RequestHandler | RequestHandler[];
     description?: string;
+}
+
+/**
+ * HATEOAS Link interface.
+ */
+export interface Link {
+    rel: string;
+    action: Method;
+    href: string;
 }
