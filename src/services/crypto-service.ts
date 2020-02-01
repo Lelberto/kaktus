@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import randomString from 'crypto-random-string';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -40,5 +41,14 @@ export default class CryptoService extends Service {
      */
     public async compare(value: string, hash: string): Promise<boolean> {
         return await bcrypt.compare(value, hash);
+    }
+
+    /**
+     * Generates a random hex-string with the given length.
+     * 
+     * @param length String length
+     */
+    public generateRandomString(length: number = 10): string {
+        return randomString({ length });
     }
 }
