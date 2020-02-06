@@ -32,7 +32,7 @@ export default class ConfigurationService extends Service {
      * @async
      */
     public async load<T>(path: string, type: ConfigurationType): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+        return await new Promise<T>((resolve, reject) => {
             fs.readFile(path, 'utf-8', (err, data) => {
                 if (err) {
                     return reject(err);
