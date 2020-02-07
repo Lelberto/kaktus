@@ -28,8 +28,27 @@ export default class LogService extends Service {
      */
     public log(msg: any, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): void {
         const now = Date.now();
-        const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${typeof msg === 'object' ? JSON.stringify(msg) : msg}`;
-        console.log(fullMsg);
+        const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${(typeof msg === 'object') ? JSON.stringify(msg) : msg}`;
+        switch (severity) {
+            default:
+                console.log(fullMsg);
+                break;
+            case 'INFO':
+                console.info(fullMsg);
+                break;
+            case 'WARN':
+                console.warn(fullMsg);
+                break;
+            case 'ERROR':
+                console.error(fullMsg);
+                if (msg instanceof Error) {
+                    console.error(msg);
+                }
+                break;
+            case 'DEBUG':
+                console.debug(fullMsg);
+                break;
+        }
         this.write(now, options, fullMsg);
     }
 
