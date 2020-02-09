@@ -51,4 +51,13 @@ export default class CryptoService extends Service {
     public generateRandomString(length: number = 10): string {
         return randomString({ length });
     }
+
+    /**
+     * Generates a random numeric-string with the given length.
+     * 
+     * @param length String length
+     */
+    public generateRandomNumeric(length: number = 10): string {
+        return randomString({ type: 'numeric', length });
+    }
 }
