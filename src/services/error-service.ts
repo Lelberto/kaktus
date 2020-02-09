@@ -50,6 +50,20 @@ export default class ErrorService extends Service {
     }
 
     /**
+     * Formats the generic server error to JSON response.
+     * 
+     * @param errorUri Documentation URI error
+     * @returns Formated generic server error
+     */
+    public formatServerError(errorUri?: string): APIError {
+        return this.formatErrors(500, {
+            error: 'server_error',
+            error_description: 'Internal server error',
+            error_uri: errorUri
+        });
+    }
+
+    /**
      * Translates mongoose validation error to API errors format.
      * 
      * This method can returns multiple API errors with only one mongoose validation error.
