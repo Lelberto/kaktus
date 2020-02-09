@@ -14,6 +14,7 @@
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.8.11",
+    "twig": "^1.14.0",
     "yaml": "^1.7.2"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@types/jsonwebtoken": "^8.3.7",
     "@types/mongoose": "^5.7.0",
     "@types/node": "^13.7.0",
+    "@types/twig": "^1.12.2",
     "@types/yaml": "^1.2.0"
   }
 }

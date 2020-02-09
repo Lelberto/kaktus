@@ -87,6 +87,10 @@ export default class ExpressService extends Service {
         app.use(helmet());
         app.use(cors());
 
+        // Views for OAuth2
+        app.set('views', 'public/views');
+        app.set('view engine', 'twig');
+
         // Set response locals
         app.use((req, res, next) => {
             res.locals.data = {
