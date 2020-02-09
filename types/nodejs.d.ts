@@ -10,5 +10,7 @@ declare namespace NodeJS {
         ACCESS_TOKEN_EXPIRATION: string;
         REFRESH_TOKEN_KEY: string;
         REFRESH_TOKEN_EXPIRATION: string;
+        AUTHORIZATION_CODE_LENGTH: string;
+        AUTHORIZATION_CODE_EXPIRATION: string;
     }
 }
