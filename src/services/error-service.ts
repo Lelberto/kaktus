@@ -68,12 +68,12 @@ export default class ErrorService extends Service {
      * 
      * This method can returns multiple API errors with only one mongoose validation error.
      * 
-     * @param err Mongoose validation error
+     * @param validationError Mongoose validation error
      */
-    public translateMongooseValidationErrors(err: any): APIError[] {
+    public translateMongooseValidationError(validationError: any): APIError[] {
         const translatedErrors: APIError[] = [];
-        for (const field of Object.keys(err.errors)) {
-            const subError = err.errors[field];
+        for (const field of Object.keys(validationError.errors)) {
+            const subError = validationError.errors[field];
             translatedErrors.push({
                 error: 'validation_failed',
                 error_description: subError.message
