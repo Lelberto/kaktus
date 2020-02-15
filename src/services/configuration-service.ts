@@ -96,4 +96,8 @@ export interface ServicesConfiguration {
     log: {
         dateFormat: string;
     };
+    cache: {
+        ttl: number;
+        checkPeriod: number;
+    };
 }
