@@ -78,3 +78,11 @@ export interface AccessTokenData extends TokenData {}
  */
 // tslint:disable-next-line: no-empty-interface
 export interface RefreshTokenData extends TokenData {}
+
+/**
+ * Authorization code data interface.
+ */
+export interface AuthorizationCodeData extends TokenData {
+    scope: string[];
+    redirectUri: string;
+}
