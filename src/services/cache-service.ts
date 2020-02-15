@@ -9,7 +9,7 @@ import ServiceContainer from './service-container';
  */
 export default class CacheService extends Service {
 
-    public readonly cache: NodeCache;
+    private readonly cache: NodeCache;
 
     /**
      * Creates a new cache service.
