@@ -112,13 +112,13 @@ export default class CacheService extends Service {
      */
     private createEvents(): void {
         this.cache.on('set', (key: string, value) => {
-            this.container.log.info(`Stored key "${key}" with value ${value}`, { type: 'cache' });
+            this.container.log.info(`Stored key "${key}" with value "${value}"`, { type: 'cache' });
         });
         this.cache.on('del', (key: string, value) => {
-            this.container.log.info(`Deleted key "${key}" with value ${value}`, { type: 'cache' });
+            this.container.log.info(`Deleted key "${key}" with value "${value}"`, { type: 'cache' });
         });
         this.cache.on('expired', (key: string, value) => {
-            this.container.log.info(`Expired key "${key}" with value ${value}`, { type: 'cache' });
+            this.container.log.info(`Expired key "${key}" with value "${value}"`, { type: 'cache' });
         });
         this.cache.on('flush', () => {
             this.container.log.info('Cache flushed', { type: 'cache' });
