@@ -41,7 +41,8 @@ function createUserSchema(container: ServiceContainer) {
         password: {
             type: Schema.Types.String,
             required: [true, 'Password is required'],
-            minlength: [8, 'Password is too small']
+            minlength: [8, 'Password is too small'],
+            select: false
         }
     });
 
