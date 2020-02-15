@@ -116,5 +116,5 @@ export type LogSeverity = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
  * Log options interface.
  */
 export interface LogOptions {
-    type?: 'logs' | 'service-container' | 'endpoints';
+    type?: 'logs' | 'service-container' | 'endpoints' | 'cache';
 }
