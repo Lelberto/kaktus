@@ -66,8 +66,8 @@ function createApplicationSchema(container: ServiceContainer) {
         grantTypes: {
             type: [Schema.Types.String],
             required: [true, 'Grant types are required'],
-            enum: ['authorization_code', 'password', 'client_credentials', 'pkce'],
-            default: ['pkce']
+            enum: ['authorization_code', 'password', 'client_credentials', 'refresh_token'],
+            default: ['authorization_code', 'refresh_token']
         },
         redirectUris: {
             type: [Schema.Types.String],
@@ -75,7 +75,7 @@ function createApplicationSchema(container: ServiceContainer) {
             validate: {
                 validator: async (uris: string[]) => {
                     for await (const uri of uris) {
-                        if (!(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm.test(uri))) {
+                        if (!(/^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)$/m.test(uri))) {
                             return false;
                         }
                     }
