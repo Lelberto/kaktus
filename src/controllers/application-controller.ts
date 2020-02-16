@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { ApplicationInstance } from '../models/application-model';
 import ServiceContainer from '../services/service-container';
 import Controller, { Link } from './controller';
 
@@ -145,6 +146,9 @@ export default class ApplicationController extends Controller {
             app.redirectUris = req.body.redirectUris;
             app.enabled = req.body.enabled;
             await app.save();
+            if (!app.enabled) {
+                await this.deleteTokens(app);
+            }
             return res.status(200).send({
                 id: app.id,
                 links: [{
@@ -207,6 +211,9 @@ export default class ApplicationController extends Controller {
                 app.enabled = req.body.enabled;
             }
             await app.save();
+            if (!app.enabled) {
+                await this.deleteTokens(app);
+            }
             return res.status(200).send({
                 id: app.id,
                 links: [{
@@ -241,7 +248,7 @@ export default class ApplicationController extends Controller {
                     error_description: 'Application not found'
                 }));
             }
-            this.container.cache.del(`auth_code_${app.id}`); // Waiting authorization code deletion
+            await this.deleteTokens(app);
             return res.status(204).send();
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
@@ -279,5 +286,15 @@ export default class ApplicationController extends Controller {
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
         }
+    }
+
+    /**
+     * Deletes application waiting authorization codes and refresh tokens.
+     * 
+     * @param app Application
+     */
+    private async deleteTokens(app: ApplicationInstance): Promise<any> {
+        this.container.cache.del(`auth_code_${app.id}`); // Waiting authorization code deletion
+        await this.db.refreshTokens.deleteMany({ application: app }); // Refresh tokens deletion
     }
 }
