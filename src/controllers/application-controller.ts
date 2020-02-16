@@ -277,11 +277,7 @@ export default class ApplicationController extends Controller {
             await app.save();
             return res.status(200).send({
                 id: app.id,
-                links: [{
-                    rel: 'Gets the updated application',
-                    action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${app.id}`
-                }] as Link[]
+                secret: app.secret
             });
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
