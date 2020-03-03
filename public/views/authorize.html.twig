@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Authorization - {{ app.name }}</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="text-center">
+                <h1>Authorization</h1>
+                <h2><span class="text-primary">{{ app.name }}</span> would like to connect to your account</h2>
+            </div>
+            <div>
+                <p>This application wants to access :</p>
+                <ul class="list-group list-group-horizontal mx-auto">
+                    {% for value in scope %}
+                        <li class="list-group-item">{{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+            <form method="POST" action="{{ callbackUrl }}">
+                <div class="row">
+                    <button class="col-5 btn btn-lg btn-outline-success" type="submit" name="response" value="allow">Allow</button>
+                    <button class="offset-2 col-5 btn btn-lg btn-outline-danger" type="submit" name="response" value="deny">Deny</button>
+                </div>
+                <input type="hidden" name="client_id" value="{{ client_id }}">
+                <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+                <input type="hidden" name="scope" value="{{ scope }}">
+                <input type="hidden" name="state" value="{{ state }}">
+            </form>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
+    </body>
+</html>
