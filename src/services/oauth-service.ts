@@ -58,4 +58,4 @@ export default class OAuthService extends Service {
 /**
  * Grant types type.
  */
-export type GrantType = 'authorization_code' | 'password' | 'client_credentials';
+export type GrantType = 'authorization_code' | 'password' | 'client_credentials' | 'refresh_token';
