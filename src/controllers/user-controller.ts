@@ -58,7 +58,7 @@ export default class UserController extends Controller {
      */
     public async getHandler(req: Request, res: Response): Promise<any> {
         try {
-            const user = await this.db.users.findById(req.params.id);
+            const user = await this.db.users.findById(req.params.id).populate('applications');
             if (user == null) {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',

@@ -1,6 +1,7 @@
 import { Document, Model, Mongoose, Schema } from 'mongoose';
 import ServiceContainer from '../services/service-container';
 import Attributes from './model';
+import { ApplicationInstance } from './application-model';
 
 /**
  * User attributes interface.
@@ -8,6 +9,7 @@ import Attributes from './model';
 export interface UserAttributes extends Attributes {
     name: string;
     password: string;
+    applications: ApplicationInstance[];
 }
 
 /**
@@ -44,6 +46,16 @@ function createUserSchema(container: ServiceContainer) {
             minlength: [8, 'Password is too small'],
             select: false
         }
+    }, {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    });
+
+    schema.virtual('applications', {
+        ref: 'Application',
+        localField: '_id',
+        foreignField: 'author',
     });
 
     // Password hash validation
