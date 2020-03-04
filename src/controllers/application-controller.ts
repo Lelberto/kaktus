@@ -23,6 +23,7 @@ export default class ApplicationController extends Controller {
         this.modifyHandler = this.modifyHandler.bind(this);
         this.updateHandler = this.updateHandler.bind(this);
         this.deleteHandler = this.deleteHandler.bind(this);
+        this.regenerateSecretHandler = this.regenerateSecretHandler.bind(this);
         this.registerEndpoint({ method: 'GET', uri: '/', handlers: this.listHandler });
         this.registerEndpoint({ method: 'GET', uri: '/:id', handlers: this.getHandler });
         this.registerEndpoint({ method: 'POST', uri: '/', handlers: this.createHandler });
