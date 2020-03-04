@@ -43,7 +43,8 @@ function createApplicationSchema(container: ServiceContainer) {
         secret: {
             type: Schema.Types.String,
             required: [true, 'Secret is required'],
-            default: container.crypto.generateRandomString(50)
+            default: container.crypto.generateRandomString(50),
+            select: false
         },
         name: {
             type: Schema.Types.String,
@@ -61,7 +62,13 @@ function createApplicationSchema(container: ServiceContainer) {
         author: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: [true, 'Author is required']
+            required: [true, 'Author is required'],
+            validate: {
+                validator: async (authorId: string) => {
+                    return await container.db.users.exists({ _id: authorId });
+                },
+                message: 'Invalid author'
+            }
         },
         grantTypes: {
             type: [Schema.Types.String],

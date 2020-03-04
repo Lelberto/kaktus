@@ -85,12 +85,6 @@ export default class ApplicationController extends Controller {
      */
     public async createHandler(req: Request, res: Response): Promise<any> {
         try {
-            if (!await this.db.users.exists({ _id: req.body.author })) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
-                    error: 'not_found',
-                    error_description: 'Author not found'
-                }));
-            }
             const app = await this.db.applications.create({
                 name: req.body.name,
                 description: req.body.description,
@@ -131,12 +125,6 @@ export default class ApplicationController extends Controller {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
                     error_description: 'Application not found'
-                }));
-            }
-            if (req.body.author != null && !await this.db.users.exists({ _id: req.body.author })) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
-                    error: 'not_found',
-                    error_description: 'Author not found'
                 }));
             }
             app.name = req.body.name;
@@ -182,12 +170,6 @@ export default class ApplicationController extends Controller {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
                     error_description: 'Application not found'
-                }));
-            }
-            if (req.body.author != null && !await this.db.users.exists({ _id: req.body.author })) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
-                    error: 'not_found',
-                    error_description: 'Author not found'
                 }));
             }
             if (req.body.name != null) {
