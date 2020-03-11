@@ -238,7 +238,7 @@ export default class OAuthController extends Controller {
             });
         }
         try {
-            const app = await this.db.applications.findById(client_id);
+            const app = await this.db.applications.findById(client_id).select('+secret');
             if (app == null) {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
@@ -249,6 +249,12 @@ export default class OAuthController extends Controller {
                 return res.status(403).send(this.container.errors.formatErrors(404, {
                     error: 'access_denied',
                     error_description: 'Application is disabled'
+                }));
+            }
+            if (client_secret !== app.secret) {
+                return res.status(403).send(this.container.errors.formatErrors(403, {
+                    error: 'access_denied',
+                    error_description: 'Invalid client_secret'
                 }));
             }
             if (!app.grantTypes.includes('authorization_code')) {
@@ -298,7 +304,7 @@ export default class OAuthController extends Controller {
             });
         }
         try {
-            const app = await this.db.applications.findById(client_id);
+            const app = await this.db.applications.findById(client_id).select('+secret');
             if (app == null) {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
@@ -323,7 +329,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is not allowed to use the "password" grant_type'
                 }));
             }
-            const user = await this.db.users.findOne({ name: username });
+            const user = await this.db.users.findOne({ name: username }).select('+password');
             if (user == null) {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
@@ -348,7 +354,7 @@ export default class OAuthController extends Controller {
         if (refresh_token == null) {
             errors.push({
                 error: 'invalid_request',
-                error_description: 'code parameter is required'
+                error_description: 'refresh_token parameter is required'
             });
         }
         if (client_id == null) {
@@ -363,8 +369,14 @@ export default class OAuthController extends Controller {
                 error_description: 'client_secret parameter is required'
             });
         }
+        if (errors.length > 0) {
+            return res.status(400).send({
+                status: 400,
+                errors
+            });
+        }
         try {
-            const app = await this.db.applications.findById(client_id);
+            const app = await this.db.applications.findById(client_id).select('+secret');
             if (app == null) {
                 return res.status(404).send(this.container.errors.formatErrors(404, {
                     error: 'not_found',
