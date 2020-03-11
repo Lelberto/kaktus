@@ -98,7 +98,7 @@ export default class ApplicationController extends Controller {
                 links: [{
                     rel: 'Gets the created application',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${app.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${app.id}`
                 }] as Link[]
             });
         } catch (err) {
@@ -143,7 +143,7 @@ export default class ApplicationController extends Controller {
                 links: [{
                     rel: 'Gets the modified application',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${app.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${app.id}`
                 }] as Link[]
             });
         } catch (err) {
@@ -202,7 +202,7 @@ export default class ApplicationController extends Controller {
                 links: [{
                     rel: 'Gets the updated application',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${app.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${app.id}`
                 }] as Link[]
             });
         } catch (err) {

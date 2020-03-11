@@ -91,7 +91,7 @@ export default class UserController extends Controller {
                 links: [{
                     rel: 'Gets the created user',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${user.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`
                 }] as Link[]
             });
         } catch (err) {
@@ -128,7 +128,7 @@ export default class UserController extends Controller {
                 links: [{
                     rel: 'Gets the modified user',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${user.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`
                 }] as Link[]
             });
         } catch (err) {
@@ -169,7 +169,7 @@ export default class UserController extends Controller {
                 links: [{
                     rel: 'Gets the updated user',
                     action: 'GET',
-                    href: `${req.protocol}://${req.hostname}${this.rootUri}/${user.id}`
+                    href: `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`
                 }] as Link[]
             });
         } catch (err) {

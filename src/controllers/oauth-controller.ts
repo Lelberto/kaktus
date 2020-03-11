@@ -197,7 +197,7 @@ export default class OAuthController extends Controller {
                 redirect_uri,
                 scope: scopeValues,
                 state,
-                callbackUrl: `${req.protocol}://${req.hostname}${this.rootUri}/authorize/submit`
+                callbackUrl: `${req.protocol}://${req.get('host')}${this.rootUri}/authorize/submit`
             });
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
