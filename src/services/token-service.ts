@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { CodeChallengeMethod } from './oauth-service';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -85,4 +86,6 @@ export interface RefreshTokenData extends TokenData {}
 export interface AuthorizationCodeData extends TokenData {
     scope: string[];
     redirectUri: string;
+    codeChallenge?: string;
+    codeChallengeMethod?: CodeChallengeMethod;
 }
