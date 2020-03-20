@@ -37,7 +37,7 @@ export default class OAuthController extends Controller {
     }
 
     public async submitAuthorizeHandler(req: Request, res: Response): Promise<any> {
-        const { client_id, redirect_uri, scope, state, response } = req.body;
+        const { client_id, redirect_uri, scope, state, code_challenge, code_challenge_method, response } = req.body;
         const errors: APIError[] = [];
         if (client_id == null) {
             errors.push({
@@ -91,7 +91,7 @@ export default class OAuthController extends Controller {
         }
         switch (response) {
             case 'allow':
-                const code = await this.container.oauth.generateAuthorizationCode(client_id, scopeValues, redirect_uri);
+                const code = await this.container.oauth.generateAuthorizationCode(client_id, scopeValues, redirect_uri, code_challenge, code_challenge_method);
                 this.container.cache.set<string>(`auth_code_${client_id}`, code, parseInt(process.env.AUTHORIZATION_CODE_EXPIRATION, 10));
                 return res.redirect(302, `${redirect_uri}?code=${code}&state=${state}`);
             case 'deny':
@@ -109,6 +109,7 @@ export default class OAuthController extends Controller {
 
     public async tokenHandler(req: Request, res: Response): Promise<any> {
         const grant_type: GrantType = req.query.grant_type;
+        const code_verifier: string = req.query.code_verifier;
         if (grant_type == null) {
             return res.status(400).send(this.container.errors.formatErrors(400, {
                 error: 'invalid_request',
@@ -132,7 +133,7 @@ export default class OAuthController extends Controller {
     }
 
     private async processAuthorization(req: Request, res: Response): Promise<any> {
-        const { client_id, redirect_uri, scope, state } = req.query;
+        const { client_id, redirect_uri, scope, state, code_challenge, code_challenge_method } = req.query;
         const errors: APIError[] = [];
         if (client_id == null) {
             errors.push({
@@ -197,6 +198,8 @@ export default class OAuthController extends Controller {
                 redirect_uri,
                 scope: scopeValues,
                 state,
+                code_challenge,
+                code_challenge_method,
                 callbackUrl: `${req.protocol}://${req.get('host')}${this.rootUri}/authorize/submit`
             });
         } catch (err) {
@@ -205,7 +208,8 @@ export default class OAuthController extends Controller {
     }
 
     private async processTokenAuthorizationCode(req: Request, res: Response): Promise<any> {
-        const { code, client_id, client_secret, redirect_uri } = req.query;
+        const { code, client_id, client_secret, redirect_uri, code_verifier } = req.query;
+        const pkce = code_verifier != null;
         const errors: APIError[] = [];
         if (code == null) {
             errors.push({
@@ -219,7 +223,7 @@ export default class OAuthController extends Controller {
                 error_description: 'client_id parameter is required'
             });
         }
-        if (client_secret == null) {
+        if (!pkce && client_secret == null) {
             errors.push({
                 error: 'invalid_request',
                 error_description: 'client_secret parameter is required'
@@ -229,6 +233,12 @@ export default class OAuthController extends Controller {
             errors.push({
                 error: 'invalid_request',
                 error_description: 'redirect_uri parameter is required'
+            });
+        }
+        if (pkce && !this.container.oauth.verifyCodeVerifier(code_verifier)) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'code_verifier is invalid (43-128 characters, A-Z a-z 0-9 -._~)'
             });
         }
         if (errors.length > 0) {
@@ -251,7 +261,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is disabled'
                 }));
             }
-            if (client_secret !== app.secret) {
+            if (!pkce && (client_secret !== app.secret)) {
                 return res.status(403).send(this.container.errors.formatErrors(403, {
                     error: 'access_denied',
                     error_description: 'Invalid client_secret'
@@ -263,7 +273,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is not allowed to use the "authorization_code" grant_type'
                 }));
             }
-            if ((this.container.cache.get<string>(`auth_code_${client_id}`) !== code) || !await this.container.oauth.verifyAuthorizationCode(code, client_id, redirect_uri)) {
+            if ((this.container.cache.get<string>(`auth_code_${client_id}`) !== code) || !await this.container.oauth.verifyAuthorizationCode(code, client_id, redirect_uri, code_verifier)) {
                 return res.status(403).send(this.container.errors.formatErrors(403, {
                     error: 'access_denied',
                     error_description: 'Invalid authorization code'
@@ -295,6 +305,12 @@ export default class OAuthController extends Controller {
             errors.push({
                 error: 'invalid_request',
                 error_description: 'client_id parameter is required'
+            });
+        }
+        if (client_secret == null) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'client_secret parameter is required'
             });
         }
         if (errors.length > 0) {
@@ -389,7 +405,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is disabled'
                 }));
             }
-            if (client_secret !== app.secret) {
+            if (app.secret !== client_secret) {
                 return res.status(403).send(this.container.errors.formatErrors(403, {
                     error: 'access_denied',
                     error_description: 'Invalid client_secret'
