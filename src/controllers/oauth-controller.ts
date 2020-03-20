@@ -91,7 +91,13 @@ export default class OAuthController extends Controller {
         }
         switch (response) {
             case 'allow':
-                const code = await this.container.oauth.generateAuthorizationCode(client_id, scopeValues, redirect_uri, code_challenge, code_challenge_method);
+                const code = await this.container.oauth.generateAuthorizationCode({
+                    clientId: client_id,
+                    scope: scopeValues,
+                    redirectUri: redirect_uri,
+                    codeChallenge: code_challenge,
+                    codeChallengeMethod: code_challenge_method
+                });
                 this.container.cache.set<string>(`auth_code_${client_id}`, code, parseInt(process.env.AUTHORIZATION_CODE_EXPIRATION, 10));
                 return res.redirect(302, `${redirect_uri}?code=${code}&state=${state}`);
             case 'deny':
@@ -109,7 +115,6 @@ export default class OAuthController extends Controller {
 
     public async tokenHandler(req: Request, res: Response): Promise<any> {
         const grant_type: GrantType = req.query.grant_type;
-        const code_verifier: string = req.query.code_verifier;
         if (grant_type == null) {
             return res.status(400).send(this.container.errors.formatErrors(400, {
                 error: 'invalid_request',
@@ -276,7 +281,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Invalid password'
                 }));
             }
-            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
+            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken('password', { clientId: client_id })));
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -355,8 +360,11 @@ export default class OAuthController extends Controller {
                 }));
             }
             this.container.cache.del(`auth_code_${client_id}`);
-            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
+            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken('authorization_code', { clientId: client_id })));
         } catch (err) {
+            if (err.name === 'ValidationError') {
+                return res.status(400).send(this.container.errors.formatErrors(400, ...this.container.errors.translateMongooseValidationError(err)));
+            }
             return res.status(500).send(this.container.errors.formatServerError());
         }
     }
@@ -408,7 +416,7 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is not allowed to use the "client_credentials" grant_type'
                 }));
             }
-            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
+            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken('client_credentials', { clientId: client_id })));
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -481,26 +489,29 @@ export default class OAuthController extends Controller {
                     error_description: 'Invalid refresh token'
                 }));
             }
-            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
+            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken(refreshTokenInDb.grantType, { clientId: client_id })));
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
         }
     }
 
     private async createAccessToken(data: AccessTokenData): Promise<string> {
-        return await this.container.tokens.encode(data, process.env.ACCESS_TOKEN_KEY, {
-            algorithm: 'HS256',
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRATION
-        });
+        const options: SignOptions = { algorithm: 'HS256' };
+        const expiration = parseInt(process.env.ACCESS_TOKEN_EXPIRATION, 10);
+        if (expiration > 0) {
+            options.expiresIn = expiration;
+        }
+        return await this.container.tokens.encode(data, process.env.ACCESS_TOKEN_KEY, options);
     }
 
-    private async createRefreshToken(data: RefreshTokenData): Promise<string> {
+    private async createRefreshToken(grantType: GrantType, data: RefreshTokenData): Promise<string> {
         const options: SignOptions = { algorithm: 'HS512' };
-        if (parseInt(process.env.REFRESH_TOKEN_EXPIRATION, 10) > 0) { // Expires check
-            options.expiresIn = process.env.REFRESH_TOKEN_EXPIRATION;
+        const expiration = parseInt(process.env.REFRESH_TOKEN_EXPIRATION, 10);
+        if (expiration > 0) { // Expires check
+            options.expiresIn = expiration;
         }
         const token = await this.container.tokens.encode(data, process.env.REFRESH_TOKEN_KEY, options);
-        await this.db.refreshTokens.create({ token, application: data.clientId });
+        await this.db.refreshTokens.create({ token, grantType, application: data.clientId });
         return token;
     }
 
