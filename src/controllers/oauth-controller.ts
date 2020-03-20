@@ -124,11 +124,8 @@ export default class OAuthController extends Controller {
                 }));
             case 'password': return await this.processTokenPassword(req, res);
             case 'authorization_code': return await this.processTokenAuthorizationCode(req, res);
+            case 'client_credentials': return await this.processTokenClientCredentials(req, res);
             case 'refresh_token': return await this.processTokenRefreshToken(req, res);
-            case 'client_credentials': return res.status(400).send(this.container.errors.formatErrors(400, {
-                    error: 'unsupported_grant_type',
-                    error_description: 'This grant_type is currently unsupported'
-                }));
         }
     }
 
@@ -202,6 +199,84 @@ export default class OAuthController extends Controller {
                 code_challenge_method,
                 callbackUrl: `${req.protocol}://${req.get('host')}${this.rootUri}/authorize/submit`
             });
+        } catch (err) {
+            return res.status(500).send(this.container.errors.formatServerError());
+        }
+    }
+
+    private async processTokenPassword(req: Request, res: Response): Promise<any> {
+        const { username, password, client_id, client_secret } = req.query;
+        const errors: APIError[] = [];
+        if (username == null) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'username parameter is required'
+            });
+        }
+        if (password == null) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'password parameter is required'
+            });
+        }
+        if (client_id == null) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'client_id parameter is required'
+            });
+        }
+        if (client_secret == null) {
+            errors.push({
+                error: 'invalid_request',
+                error_description: 'client_secret parameter is required'
+            });
+        }
+        if (errors.length > 0) {
+            return res.status(400).send({
+                status: 400,
+                errors
+            });
+        }
+        try {
+            const app = await this.db.applications.findById(client_id).select('+secret');
+            if (app == null) {
+                return res.status(404).send(this.container.errors.formatErrors(404, {
+                    error: 'not_found',
+                    error_description: 'Application not found'
+                }));
+            }
+            if (!app.enabled) {
+                return res.status(403).send(this.container.errors.formatErrors(404, {
+                    error: 'access_denied',
+                    error_description: 'Application is disabled'
+                }));
+            }
+            if (client_secret !== app.secret) {
+                return res.status(403).send(this.container.errors.formatErrors(403, {
+                    error: 'access_denied',
+                    error_description: 'Invalid client_secret'
+                }));
+            }
+            if (!app.grantTypes.includes('password')) {
+                return res.status(403).send(this.container.errors.formatErrors(403, {
+                    error: 'access_denied',
+                    error_description: 'Application is not allowed to use the "password" grant_type'
+                }));
+            }
+            const user = await this.db.users.findOne({ name: username }).select('+password');
+            if (user == null) {
+                return res.status(404).send(this.container.errors.formatErrors(404, {
+                    error: 'not_found',
+                    error_description: 'User not found'
+                }));
+            }
+            if (!await this.container.crypto.compare(password, user.password)) {
+                return res.status(401).send(this.container.errors.formatErrors(401, {
+                    error: 'access_denied',
+                    error_description: 'Invalid password'
+                }));
+            }
+            return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
         } catch (err) {
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -286,21 +361,9 @@ export default class OAuthController extends Controller {
         }
     }
 
-    private async processTokenPassword(req: Request, res: Response): Promise<any> {
-        const { username, password, client_id, client_secret } = req.query;
+    private async processTokenClientCredentials(req: Request, res: Response): Promise<any> {
+        const { client_id, client_secret } = req.query;
         const errors: APIError[] = [];
-        if (username == null) {
-            errors.push({
-                error: 'invalid_request',
-                error_description: 'username parameter is required'
-            });
-        }
-        if (password == null) {
-            errors.push({
-                error: 'invalid_request',
-                error_description: 'password parameter is required'
-            });
-        }
         if (client_id == null) {
             errors.push({
                 error: 'invalid_request',
@@ -333,29 +396,16 @@ export default class OAuthController extends Controller {
                     error_description: 'Application is disabled'
                 }));
             }
-            if (client_secret !== app.secret) {
+            if (app.secret !== client_secret) {
                 return res.status(403).send(this.container.errors.formatErrors(403, {
                     error: 'access_denied',
                     error_description: 'Invalid client_secret'
                 }));
             }
-            if (!app.grantTypes.includes('password')) {
+            if (!app.grantTypes.includes('client_credentials')) {
                 return res.status(403).send(this.container.errors.formatErrors(403, {
                     error: 'access_denied',
-                    error_description: 'Application is not allowed to use the "password" grant_type'
-                }));
-            }
-            const user = await this.db.users.findOne({ name: username }).select('+password');
-            if (user == null) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
-                    error: 'not_found',
-                    error_description: 'User not found'
-                }));
-            }
-            if (!await this.container.crypto.compare(password, user.password)) {
-                return res.status(401).send(this.container.errors.formatErrors(401, {
-                    error: 'access_denied',
-                    error_description: 'Invalid password'
+                    error_description: 'Application is not allowed to use the "client_credentials" grant_type'
                 }));
             }
             return res.status(200).send(this.createTokenResponse(await this.createAccessToken({ clientId: client_id }), await this.createRefreshToken({ clientId: client_id })));
