@@ -21,29 +21,12 @@ export default class OAuthService extends Service {
     /**
      * Generates an authorization code.
      * 
-     * @param clientId Client ID
-     * @param scope Scope
-     * @param redirectUri Redirect URI
-     * @param codeChallenge Code challenge for PKCE
-     * @param codeChallenge Code challenge method for PKCE
-     * @returns Generated ans encoded authorization code
+     * @param data Data to store in the authorization code
+     * @returns Generated and encoded authorization code
      * @async
      */
-    public async generateAuthorizationCode(clientId: string, scope: string[], redirectUri: string, codeChallenge?: string, codeChallengeMethod?: CodeChallengeMethod): Promise<string> {
-        if (codeChallenge != null) {
-            return await this.container.tokens.encode<AuthorizationCodeData>({
-                clientId,
-                scope,
-                redirectUri,
-                codeChallenge,
-                codeChallengeMethod,
-            }, process.env.AUTHORIZATION_CODE_SECRET, { expiresIn: parseInt(process.env.AUTHORIZATION_CODE_EXPIRATION, 10) });
-        }
-        return await this.container.tokens.encode<AuthorizationCodeData>({
-            clientId,
-            scope,
-            redirectUri
-        }, process.env.AUTHORIZATION_CODE_SECRET, { expiresIn: parseInt(process.env.AUTHORIZATION_CODE_EXPIRATION, 10) });
+    public async generateAuthorizationCode(data: AuthorizationCodeData): Promise<string> {
+        return await this.container.tokens.encode(data, process.env.AUTHORIZATION_CODE_SECRET, { expiresIn: parseInt(process.env.AUTHORIZATION_CODE_EXPIRATION, 10) });
     }
 
     /**
