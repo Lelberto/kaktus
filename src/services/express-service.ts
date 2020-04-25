@@ -34,7 +34,7 @@ export default class ExpressService extends Service {
      * @async
      */
     public async start(port: number = 80): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return await new Promise<void>((resolve, reject) => {
             if (!this.srv || !this.srv.listening) {
                 this.srv = this.app.listen(port, err => {
                     if (err) {
@@ -55,7 +55,7 @@ export default class ExpressService extends Service {
      * @async
      */
     public async stop(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return await new Promise<void>((resolve, reject) => {
             if (this.srv && this.srv.listening) {
                 this.srv.close(err => {
                     if (err) {
@@ -99,7 +99,7 @@ export default class ExpressService extends Service {
         app.use(mung.json((body, req, res) => {
             this.container.log.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
             this.container.log.info(body, { type: 'endpoints' });
-        }));
+        }, { mungError: true }));
 
         // Registering controllers
         this.container.controllers.registerControllers(app);

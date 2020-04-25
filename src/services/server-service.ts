@@ -27,7 +27,7 @@ export default class ServerService extends Service {
 
         // Starting server
         await this.container.express.start(API_PORT as any);
-        this.container.log.info('Server started');
+        this.container.log.info('Express started');
 
         // Connecting to database
         await this.container.db.connect(DB_HOST, DB_PORT, DB_NAME);

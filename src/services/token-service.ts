@@ -63,7 +63,8 @@ export default class TokenService extends Service {
  * Token data interface.
  */
 export interface TokenData {
-    userId: string;
+    clientId: string;
+    userId?: string;
 }
 
 /**

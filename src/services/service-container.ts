@@ -1,8 +1,10 @@
+import CacheService from './cache-service';
 import ConfigurationService from './configuration-service';
 import ControllerService from './controller-service';
 import CryptoService from './crypto-service';
 import DatabaseService from './database-service';
 import EnvironmentService from './environment-service';
+import ErrorService from './error-service';
 import ExpressService from './express-service';
 import LogService from './log-service';
 import ServerService from './server-service';
@@ -41,6 +43,8 @@ export default class ServiceContainer {
     private _log: LogService | null;
     private _tokens: TokenService | null;
     private _crypto: CryptoService | null;
+    private _errors: ErrorService | null;
+    private _cache: CacheService | null;
 
     /**
      * Creates a new services container.
@@ -55,6 +59,8 @@ export default class ServiceContainer {
         this._log = null;
         this._tokens = null;
         this._crypto = null;
+        this._errors = null;
+        this._cache = null;
         this.env.load(); // Autoload environment
     }
 
@@ -128,5 +134,21 @@ export default class ServiceContainer {
             this.log.info('Loaded crypto service', { type: 'service-container' });
         }
         return this._crypto;
+    }
+
+    public get errors(): ErrorService {
+        if (!this._errors) {
+            this._errors = new ErrorService(this);
+            this.log.info('Loaded errors service', { type: 'service-container' });
+        }
+        return this._errors;
+    }
+
+    public get cache(): CacheService {
+        if (!this._cache) {
+            this._cache = new CacheService(this);
+            this.log.info('Loaded cache service', { type: 'service-container' });
+        }
+        return this._cache;
     }
 }
