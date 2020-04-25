@@ -1,9 +1,14 @@
+import CacheService from './cache-service';
 import ConfigurationService from './configuration-service';
 import ControllerService from './controller-service';
+import CryptoService from './crypto-service';
 import DatabaseService from './database-service';
 import EnvironmentService from './environment-service';
+import ErrorService from './error-service';
 import ExpressService from './express-service';
+import LogService from './log-service';
 import ServerService from './server-service';
+import TokenService from './token-service';
 
 /**
  * Services container class.
@@ -35,6 +40,11 @@ export default class ServiceContainer {
     private _db: DatabaseService | null;
     private _srv: ServerService | null;
     private _config: ConfigurationService | null;
+    private _log: LogService | null;
+    private _tokens: TokenService | null;
+    private _crypto: CryptoService | null;
+    private _errors: ErrorService | null;
+    private _cache: CacheService | null;
 
     /**
      * Creates a new services container.
@@ -46,13 +56,18 @@ export default class ServiceContainer {
         this._db = null;
         this._srv = null;
         this._config = null;
+        this._log = null;
+        this._tokens = null;
+        this._crypto = null;
+        this._errors = null;
+        this._cache = null;
         this.env.load(); // Autoload environment
     }
 
     public get env(): EnvironmentService {
         if (!this._env) {
             this._env = new EnvironmentService(this);
-            console.log('Loaded environment service');
+            this.log.info('Loaded environment service', { type: 'service-container' });
         }
         return this._env;
     }
@@ -60,7 +75,7 @@ export default class ServiceContainer {
     public get express(): ExpressService {
         if (!this._express) {
             this._express = new ExpressService(this);
-            console.log('Loaded Express service');
+            this.log.info('Loaded Express service', { type: 'service-container' });
         }
         return this._express;
     }
@@ -68,7 +83,7 @@ export default class ServiceContainer {
     public get controllers(): ControllerService {
         if (!this._controllers) {
             this._controllers = new ControllerService(this);
-            console.log('Loaded controllers service');
+            this.log.info('Loaded controllers service', { type: 'service-container' });
         }
         return this._controllers;
     }
@@ -76,7 +91,7 @@ export default class ServiceContainer {
     public get db(): DatabaseService {
         if (!this._db) {
             this._db = new DatabaseService(this);
-            console.log('Loaded database service');
+            this.log.info('Loaded database service', { type: 'service-container' });
         }
         return this._db;
     }
@@ -84,7 +99,7 @@ export default class ServiceContainer {
     public get srv(): ServerService {
         if (!this._srv) {
             this._srv = new ServerService(this);
-            console.log('Loaded server service');
+            this.log.info('Loaded server service', { type: 'service-container' });
         }
         return this._srv;
     }
@@ -92,8 +107,48 @@ export default class ServiceContainer {
     public get config(): ConfigurationService {
         if (!this._config) {
             this._config = new ConfigurationService(this);
-            console.log('Loaded configuration service');
+            this.log.info('Loaded configuration service', { type: 'service-container' });
         }
         return this._config;
+    }
+
+    public get log(): LogService {
+        if (!this._log) {
+            this._log = new LogService(this);
+            this._log.info('Loaded log service', { type: 'service-container' });
+        }
+        return this._log;
+    }
+
+    public get tokens(): TokenService {
+        if (!this._tokens) {
+            this._tokens = new TokenService(this);
+            this.log.info('Loaded tokens service', { type: 'service-container' });
+        }
+        return this._tokens;
+    }
+
+    public get crypto(): CryptoService {
+        if (!this._crypto) {
+            this._crypto = new CryptoService(this);
+            this.log.info('Loaded crypto service', { type: 'service-container' });
+        }
+        return this._crypto;
+    }
+
+    public get errors(): ErrorService {
+        if (!this._errors) {
+            this._errors = new ErrorService(this);
+            this.log.info('Loaded errors service', { type: 'service-container' });
+        }
+        return this._errors;
+    }
+
+    public get cache(): CacheService {
+        if (!this._cache) {
+            this._cache = new CacheService(this);
+            this.log.info('Loaded cache service', { type: 'service-container' });
+        }
+        return this._cache;
     }
 }

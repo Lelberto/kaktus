@@ -1,3 +1,3 @@
 import ServiceContainer from './services/service-container';
 
-ServiceContainer.getInstance().srv.start();
+ServiceContainer.getInstance().srv.start().catch(console.error);

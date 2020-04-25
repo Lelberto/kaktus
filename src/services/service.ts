@@ -1,3 +1,4 @@
+import Component from '../component';
 import ServiceContainer from './service-container';
 
 /**
@@ -7,9 +8,7 @@ import ServiceContainer from './service-container';
  * 
  * To create a service, simply extends this class and register it in the `ServiceContainer`.
  */
-export default abstract class Service {
-
-    protected readonly container: ServiceContainer;
+export default abstract class Service extends Component {
 
     /**
      * Creates a new service.
@@ -17,6 +16,6 @@ export default abstract class Service {
      * @param container Services container
      */
     public constructor(container: ServiceContainer) {
-        this.container = container;
+        super(container);
     }
 }

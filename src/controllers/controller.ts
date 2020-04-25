@@ -1,4 +1,7 @@
-import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+import { RequestHandler, Router } from 'express';
+import Component from '../component';
+import DatabaseService from '../services/database-service';
+import LogService from '../services/log-service';
 import ServiceContainer from '../services/service-container';
 
 /**
@@ -8,12 +11,13 @@ import ServiceContainer from '../services/service-container';
  * 
  * To create a controller, simply extends this class and register it in the `ControllerService`.
  */
-export default abstract class Controller {
+export default abstract class Controller extends Component {
 
     public readonly rootUri: string;
     public readonly router: Router;
     public readonly endpoints: Endpoint[];
-    protected readonly container: ServiceContainer;
+    protected readonly logger: LogService; // Alias for `this.container.log`
+    protected readonly db: DatabaseService; // Alias for `this.container.db`
 
     /**
      * Creates a new controller.
@@ -22,10 +26,12 @@ export default abstract class Controller {
      * @param rootUri Root URI
      */
     public constructor(container: ServiceContainer, rootUri: string) {
-        this.container = container;
+        super(container);
         this.rootUri = rootUri;
         this.router = Router();
         this.endpoints = [];
+        this.logger = container.log;
+        this.db = container.db;
     }
 
     /**
@@ -38,45 +44,44 @@ export default abstract class Controller {
         switch (endpoint.method) {
             default:
             case 'GET':
-                this.router.get(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.get(endpoint.uri, endpoint.handlers);
                 break;
             case 'POST':
-                this.router.post(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.post(endpoint.uri, endpoint.handlers);
                 break;
             case 'PUT':
-                this.router.put(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.put(endpoint.uri, endpoint.handlers);
                 break;
             case 'PATCH':
-                this.router.patch(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.patch(endpoint.uri, endpoint.handlers);
                 break;
             case 'DELETE':
-                this.router.delete(endpoint.uri, this.triggerEndpointHandler, endpoint.handlers);
+                this.router.delete(endpoint.uri, endpoint.handlers);
                 break;
         }
     }
-
-    /**
-     * Logs a message when an endpoint is triggered.
-     * 
-     * This method is a handler.
-     * 
-     * @param req Express request
-     * @param res Express response
-     * @param next Next handler
-     * @async
-     */
-    private async triggerEndpointHandler(req: Request, res: Response, next: NextFunction): Promise<any> {
-        console.log(`${req.ip} > ${req.method} ${req.originalUrl}`);
-        return next();
-    }
 }
+
+/**
+ * Method type.
+ */
+export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 /**
  * Endpoint interface.
  */
 export interface Endpoint {
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+    method: Method;
     uri: string;
-    handlers: RequestHandler[];
+    handlers: RequestHandler | RequestHandler[];
     description?: string;
+}
+
+/**
+ * HATEOAS Link interface.
+ */
+export interface Link {
+    rel: string;
+    action: Method;
+    href: string;
 }

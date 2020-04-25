@@ -5,9 +5,8 @@
 ## Usage
 - Download the latest version
 - Unzip and rename the folder as you want
-- Install TypeScript globally with `npm i typescript -g`
-- Remove the `src/controllers/example-controller.ts` file and unregister the example controller in `src/services/controller-service.ts` (line 26)
-- Add your information in `package.json`, like name, description, author, etc...
+- Install TypeScript globally with `npm i -g typescript`
+- Add your information in `package.json` (project name, description, author, etc...)
 - Create a `.env` file like `.example.env` with yours parameters
-- Create a `config/api.yml` file like `config/api.example.yml` with your configuration
+- Do the same thing with configuration files `config/*.example.yml` with your configuration
 - Execute `npm i` and `npm start`
