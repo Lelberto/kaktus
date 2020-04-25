@@ -7,7 +7,6 @@ import EnvironmentService from './environment-service';
 import ErrorService from './error-service';
 import ExpressService from './express-service';
 import LogService from './log-service';
-import OAuthService from './oauth-service';
 import ServerService from './server-service';
 import TokenService from './token-service';
 
@@ -46,7 +45,6 @@ export default class ServiceContainer {
     private _crypto: CryptoService | null;
     private _errors: ErrorService | null;
     private _cache: CacheService | null;
-    private _oauth: OAuthService | null;
 
     /**
      * Creates a new services container.
@@ -63,7 +61,6 @@ export default class ServiceContainer {
         this._crypto = null;
         this._errors = null;
         this._cache = null;
-        this._oauth = null;
         this.env.load(); // Autoload environment
     }
 
@@ -153,13 +150,5 @@ export default class ServiceContainer {
             this.log.info('Loaded cache service', { type: 'service-container' });
         }
         return this._cache;
-    }
-
-    public get oauth(): OAuthService {
-        if (!this._oauth) {
-            this._oauth = new OAuthService(this);
-            this.log.info('Loaded OAuth service', { type: 'service-container' });
-        }
-        return this._oauth;
     }
 }

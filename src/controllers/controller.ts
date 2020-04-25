@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import Component from '../component';
 import DatabaseService from '../services/database-service';
 import LogService from '../services/log-service';
