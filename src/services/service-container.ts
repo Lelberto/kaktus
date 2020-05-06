@@ -7,6 +7,7 @@ import EnvironmentService from './environment-service';
 import ErrorService from './error-service';
 import ExpressService from './express-service';
 import LogService from './log-service';
+import SchedulerService from './scheduler-service';
 import ServerService from './server-service';
 import TokenService from './token-service';
 
@@ -45,6 +46,7 @@ export default class ServiceContainer {
     private _crypto: CryptoService | null;
     private _errors: ErrorService | null;
     private _cache: CacheService | null;
+    private _scheduler: SchedulerService | null;
 
     /**
      * Creates a new services container.
@@ -61,6 +63,7 @@ export default class ServiceContainer {
         this._crypto = null;
         this._errors = null;
         this._cache = null;
+        this._scheduler = null;
         this.env.load(); // Autoload environment
     }
 
@@ -150,5 +153,13 @@ export default class ServiceContainer {
             this.log.info('Loaded cache service', { type: 'service-container' });
         }
         return this._cache;
+    }
+
+    public get scheduler(): SchedulerService {
+        if (!this._scheduler) {
+            this._scheduler = new SchedulerService(this);
+            this.log.info('Loaded scheduler service', { type: 'service-container' });
+        }
+        return this._scheduler;
     }
 }
