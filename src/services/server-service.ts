@@ -40,9 +40,8 @@ export default class ServerService extends Service {
      * @async
      */
     public async stop(): Promise<void> {
-        // Stopping all tasks / timers
+        // Stopping all tasks
         this.container.scheduler.stopAllTasks();
-        this.container.scheduler.stopAllTimers();
 
         // Stopping server
         await this.container.express.stop();
