@@ -7,6 +7,7 @@ import EnvironmentService from './environment-service';
 import ErrorService from './error-service';
 import ExpressService from './express-service';
 import LogService from './log-service';
+import SchedulerService from './scheduler-service';
 import ServerService from './server-service';
 import TokenService from './token-service';
 
@@ -34,17 +35,18 @@ export default class ServiceContainer {
         return ServiceContainer.INSTANCE;
     }
 
-    private _env: EnvironmentService | null;
-    private _express: ExpressService | null;
-    private _controllers: ControllerService | null;
-    private _db: DatabaseService | null;
-    private _srv: ServerService | null;
-    private _config: ConfigurationService | null;
-    private _log: LogService | null;
-    private _tokens: TokenService | null;
-    private _crypto: CryptoService | null;
-    private _errors: ErrorService | null;
-    private _cache: CacheService | null;
+    private _env: EnvironmentService;
+    private _express: ExpressService;
+    private _controllers: ControllerService;
+    private _db: DatabaseService;
+    private _srv: ServerService;
+    private _config: ConfigurationService;
+    private _log: LogService;
+    private _tokens: TokenService;
+    private _crypto: CryptoService;
+    private _errors: ErrorService;
+    private _cache: CacheService;
+    private _scheduler: SchedulerService;
 
     /**
      * Creates a new services container.
@@ -61,6 +63,7 @@ export default class ServiceContainer {
         this._crypto = null;
         this._errors = null;
         this._cache = null;
+        this._scheduler = null;
         this.env.load(); // Autoload environment
     }
 
@@ -150,5 +153,13 @@ export default class ServiceContainer {
             this.log.info('Loaded cache service', { type: 'service-container' });
         }
         return this._cache;
+    }
+
+    public get scheduler(): SchedulerService {
+        if (!this._scheduler) {
+            this._scheduler = new SchedulerService(this);
+            this.log.info('Loaded scheduler service', { type: 'service-container' });
+        }
+        return this._scheduler;
     }
 }
