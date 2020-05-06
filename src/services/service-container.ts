@@ -35,18 +35,18 @@ export default class ServiceContainer {
         return ServiceContainer.INSTANCE;
     }
 
-    private _env: EnvironmentService | null;
-    private _express: ExpressService | null;
-    private _controllers: ControllerService | null;
-    private _db: DatabaseService | null;
-    private _srv: ServerService | null;
-    private _config: ConfigurationService | null;
-    private _log: LogService | null;
-    private _tokens: TokenService | null;
-    private _crypto: CryptoService | null;
-    private _errors: ErrorService | null;
-    private _cache: CacheService | null;
-    private _scheduler: SchedulerService | null;
+    private _env: EnvironmentService;
+    private _express: ExpressService;
+    private _controllers: ControllerService;
+    private _db: DatabaseService;
+    private _srv: ServerService;
+    private _config: ConfigurationService;
+    private _log: LogService;
+    private _tokens: TokenService;
+    private _crypto: CryptoService;
+    private _errors: ErrorService;
+    private _cache: CacheService;
+    private _scheduler: SchedulerService;
 
     /**
      * Creates a new services container.
