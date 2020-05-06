@@ -52,8 +52,8 @@ export default class SchedulerService extends Service {
      * @param fc Function to run
      * @param time Time to wait before run timer in milliseconds
      */
-    public runTimer(fc: (timer?: Task) => void, time: number): void {
-        setTimeout(fc as any, time);
+    public runTimer(fc: () => void, time: number): void {
+        setTimeout(fc, time);
     }
 
     /**
