@@ -87,6 +87,7 @@ export type ConfigurationType = 'JSON' | 'YAML';
  */
 export interface APIConfiguration {
     requestSizeLimit: string;
+    documentationRoute: string;
 }
 
 /**
