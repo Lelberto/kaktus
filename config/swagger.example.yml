@@ -1,0 +1,239 @@
+openapi: 3.0.0
+info:
+  description: API documentation
+  version: "1.0.0"
+  title: API documentation
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: "https://virtserver.swaggerhub.com/Lelberto/api-framework/1.0.0"
+  - url: "https://api.example.com/server1"
+  - url: "https://api.example.com/server2"
+tags:
+  - name: users
+    description: Access to users
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Gets all users
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+  "/users/{userId}":
+    parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - users
+      summary: Gets a specific user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Link"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+    put:
+      tags:
+        - users
+      summary: Modifies an user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Link"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+    patch:
+      tags:
+        - users
+      summary: Updates an user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Link"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+    delete:
+      tags:
+        - users
+      summary: Deletes an user
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+    Link:
+      type: object
+      properties:
+        rel:
+          type: string
+        action:
+          type: string
+          enum: [GET, POST, PUT, PATCH, DELETE]
+        href:
+          type: string
+    APIError:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string

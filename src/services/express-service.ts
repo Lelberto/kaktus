@@ -3,6 +3,7 @@ import express from 'express';
 import mung from 'express-mung';
 import helmet from 'helmet';
 import { Server } from 'http';
+import swagger from 'swagger-ui-express';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -100,6 +101,13 @@ export default class ExpressService extends Service {
             this.container.log.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
             this.container.log.info(body, { type: 'endpoints' });
         }, { mungError: true }));
+
+        // Swagger documentation
+        const docRoute = this.container.config.api.documentationRoute;
+        if (docRoute != null) {
+            app.use(docRoute, swagger.serve, swagger.setup(this.container.config.loadSync('config/swagger.yml', 'YAML')));
+            this.container.log.info('Loaded Swagger documentation');
+        }
 
         // Registering controllers
         this.container.controllers.registerControllers(app);
