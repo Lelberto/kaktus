@@ -60,7 +60,7 @@ export default class UserController extends Controller {
         try {
             const user = await this.db.users.findById(req.params.id).populate('applications');
             if (user == null) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
+                return res.status(404).send(this.container.errors.formatErrors({
                     error: 'not_found',
                     error_description: 'User not found'
                 }));
@@ -96,7 +96,7 @@ export default class UserController extends Controller {
             });
         } catch (err) {
             if (err.name === 'ValidationError') {
-                return res.status(400).send(this.container.errors.formatErrors(400, ...this.container.errors.translateMongooseValidationError(err)));
+                return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -115,7 +115,7 @@ export default class UserController extends Controller {
         try {
             const user = await this.db.users.findById(req.params.id);
             if (user == null) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
+                return res.status(404).send(this.container.errors.formatErrors({
                     error: 'not_found',
                     error_description: 'User not found'
                 }));
@@ -133,7 +133,7 @@ export default class UserController extends Controller {
             });
         } catch (err) {
             if (err.name === 'ValidationError') {
-                return res.status(400).send(this.container.errors.formatErrors(400, ...this.container.errors.translateMongooseValidationError(err)));
+                return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -152,7 +152,7 @@ export default class UserController extends Controller {
         try {
             const user = await this.db.users.findById(req.params.id);
             if (user == null) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
+                return res.status(404).send(this.container.errors.formatErrors({
                     error: 'not_found',
                     error_description: 'User not found'
                 }));
@@ -174,7 +174,7 @@ export default class UserController extends Controller {
             });
         } catch (err) {
             if (err.name === 'ValidationError') {
-                return res.status(400).send(this.container.errors.formatErrors(400, ...this.container.errors.translateMongooseValidationError(err)));
+                return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
             return res.status(500).send(this.container.errors.formatServerError());
         }
@@ -193,7 +193,7 @@ export default class UserController extends Controller {
         try {
             const user = await this.db.users.findByIdAndDelete(req.params.id);
             if (user == null) {
-                return res.status(404).send(this.container.errors.formatErrors(404, {
+                return res.status(404).send(this.container.errors.formatErrors({
                     error: 'not_found',
                     error_description: 'User not found'
                 }));

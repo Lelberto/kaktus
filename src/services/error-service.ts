@@ -20,15 +20,11 @@ export default class ErrorService extends Service {
     /**
      * Formats errors to JSON response.
      * 
-     * @param status Response status
      * @param errors Errors to format
      * @returns Formatted errors response
      */
-    public formatErrors(status: number, ...errors: APIError[]): any {
-        return {
-            status,
-            errors
-        };
+    public formatErrors(...errors: APIError[]): any {
+        return { errors };
     }
 
     /**
@@ -56,7 +52,7 @@ export default class ErrorService extends Service {
      * @returns Formated generic server error
      */
     public formatServerError(errorUri?: string): APIError {
-        return this.formatErrors(500, {
+        return this.formatErrors({
             error: 'server_error',
             error_description: 'Internal server error',
             error_uri: errorUri
