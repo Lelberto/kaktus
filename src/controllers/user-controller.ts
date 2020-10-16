@@ -16,12 +16,6 @@ export default class UserController extends Controller {
      */
     public constructor(container: ServiceContainer) {
         super(container, '/users');
-        this.listHandler = this.listHandler.bind(this);
-        this.getHandler = this.getHandler.bind(this);
-        this.createHandler = this.createHandler.bind(this);
-        this.modifyHandler = this.modifyHandler.bind(this);
-        this.updateHandler = this.updateHandler.bind(this);
-        this.deleteHandler = this.deleteHandler.bind(this);
         this.registerEndpoint({ method: 'GET', uri: '/', handlers: this.listHandler });
         this.registerEndpoint({ method: 'GET', uri: '/:id', handlers: this.getHandler });
         this.registerEndpoint({ method: 'POST', uri: '/', handlers: this.createHandler });
