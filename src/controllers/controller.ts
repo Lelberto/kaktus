@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { RequestHandler, Router } from 'express';
 import Component from '../component';
 import DatabaseService from '../services/database-service';
@@ -41,6 +42,7 @@ export default abstract class Controller extends Component {
      */
     protected registerEndpoint(endpoint: Endpoint): void {
         this.endpoints.push(endpoint);
+        this.bindHandlers(endpoint);
         switch (endpoint.method) {
             default:
             case 'GET':
@@ -58,6 +60,19 @@ export default abstract class Controller extends Component {
             case 'DELETE':
                 this.router.delete(endpoint.uri, endpoint.handlers);
                 break;
+        }
+    }
+
+    /**
+     * Binds endpoint's handlers to access to `this`.
+     * 
+     * @param endpoint Endpoint to bind
+     */
+    private bindHandlers(endpoint: Endpoint) {
+        if (_.isArray(endpoint.handlers)) {
+            (endpoint.handlers as RequestHandler[]).forEach(handler => handler.bind(this));
+        } else {
+            endpoint.handlers = (endpoint.handlers as RequestHandler).bind(this);
         }
     }
 }
