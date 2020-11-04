@@ -1,7 +1,8 @@
 {
   "main": "build/app.js",
   "scripts": {
-    "start": "tsc -p tsconfig.json && node build/app.js"
+    "start": "tsc -p tsconfig.json && node build/app.js",
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
