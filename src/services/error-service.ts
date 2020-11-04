@@ -1,3 +1,4 @@
+import { Error } from 'mongoose';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -23,7 +24,7 @@ export default class ErrorService extends Service {
      * @param errors Errors to format
      * @returns Formatted errors response
      */
-    public formatErrors(...errors: APIError[]): any {
+    public formatErrors(...errors: APIError[]): APIErrorResponse {
         return { errors };
     }
 
@@ -33,7 +34,7 @@ export default class ErrorService extends Service {
      * @param err Error to format
      * @returns Formatted error query string
      */
-    public formatErrorQuery(err: APIError): any {
+    public formatErrorQuery(err: APIError): string {
         const { error, error_description, error_uri } = err;
         let formatted = `error=${error}`;
         if (error_description != null) {
@@ -51,7 +52,7 @@ export default class ErrorService extends Service {
      * @param errorUri Documentation URI error
      * @returns Formated generic server error
      */
-    public formatServerError(errorUri?: string): APIError {
+    public formatServerError(errorUri?: string): APIErrorResponse {
         return this.formatErrors({
             error: 'server_error',
             error_description: 'Internal server error',
@@ -66,7 +67,7 @@ export default class ErrorService extends Service {
      * 
      * @param validationError Mongoose validation error
      */
-    public translateMongooseValidationError(validationError: any): APIError[] {
+    public translateMongooseValidationError(validationError: Error.ValidationError): APIError[] {
         const translatedErrors: APIError[] = [];
         for (const field of Object.keys(validationError.errors)) {
             const subError = validationError.errors[field];
@@ -86,6 +87,13 @@ export interface APIError {
     error: ErrorCode;
     error_description?: string;
     error_uri?: string;
+}
+
+/**
+ * API error response interface.
+ */
+export interface APIErrorResponse {
+    errors: APIError[];
 }
 
 /**
