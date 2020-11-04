@@ -1,3 +1,4 @@
+import { setInterval } from 'timers';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -28,7 +29,7 @@ export default class SchedulerService extends Service {
      * @param time Time interval in milliseconds
      */
     public runTask(name: string, fc: (task?: Task) => void, time: number): void {
-        this.tasks.set(name, setInterval(fc as any, time, new Task(this, name)));
+        this.tasks.set(name, setInterval(fc, time, new Task(this, name)));
     }
 
     /**

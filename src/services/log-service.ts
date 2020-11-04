@@ -26,7 +26,7 @@ export default class LogService extends Service {
      * @param severity Log severity
      * @param options Log options
      */
-    public log(msg: any, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): void {
+    public log(msg: unknown, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): void {
         const now = Date.now();
         const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${(typeof msg === 'object') ? JSON.stringify(msg) : msg}`;
         switch (severity) {
@@ -58,7 +58,7 @@ export default class LogService extends Service {
      * @param msg Message to log
      * @param options Log options
      */
-    public info(msg: any, options: LogOptions = { type: 'logs' }): void {
+    public info(msg: unknown, options: LogOptions = { type: 'logs' }): void {
         this.log(msg, 'INFO', options);
     }
 
@@ -68,7 +68,7 @@ export default class LogService extends Service {
      * @param msg Message to log
      * @param options Log options
      */
-    public warn(msg: any, options: LogOptions = { type: 'logs' }): void {
+    public warn(msg: unknown, options: LogOptions = { type: 'logs' }): void {
         this.log(msg, 'WARN', options);
     }
 
@@ -78,7 +78,7 @@ export default class LogService extends Service {
      * @param msg Message to log
      * @param options Log options
      */
-    public error(msg: any, options: LogOptions = { type: 'logs' }): void {
+    public error(msg: unknown, options: LogOptions = { type: 'logs' }): void {
         this.log(msg, 'ERROR', options);
     }
 
@@ -88,7 +88,7 @@ export default class LogService extends Service {
      * @param msg Message to log
      * @param options Log options
      */
-    public debug(msg: any, options: LogOptions = { type: 'logs' }): void {
+    public debug(msg: unknown, options: LogOptions = { type: 'logs' }): void {
         this.log(msg, 'DEBUG', options);
     }
 
@@ -99,7 +99,7 @@ export default class LogService extends Service {
      * @param type Log type (to write to the desired file)
      * @param msg Log message
      */
-    private write(date: number, options: LogOptions, msg: any): void {
+    private write(date: number, options: LogOptions, msg: unknown): void {
         if (!fs.existsSync('logs')) {
             fs.mkdirSync('logs');
         }
