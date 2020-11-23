@@ -6,6 +6,7 @@ import Attributes from './model';
  * User attributes interface.
  */
 export interface UserAttributes extends Attributes {
+    [key: string]: string | Date | number | string[] | unknown;
     name: string;
     password: string;
 }

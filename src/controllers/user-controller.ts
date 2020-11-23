@@ -151,12 +151,14 @@ export default class UserController extends Controller {
                     error_description: 'User not found'
                 }));
             }
-            if (req.body.name != null) {
-                user.name = req.body.name;
+
+            // The key is set in the user-model.ts
+            for (const [key, value] of Object.entries(req.body)){
+                if (value != null) {
+                    user[key] = value;
+                }
             }
-            if (req.body.password != null) {
-                user.password = req.body.password;
-            }
+
             await user.save();
             return res.status(200).send({
                 id: user.id,
