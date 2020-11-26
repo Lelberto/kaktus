@@ -1,0 +1,40 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+        "quotes": [1, "single"],
+        "interface-name": 0,
+        "arrow-parens": 0,
+        "no-trailing-spaces": [1, {
+            "ignoreComments": true
+        }],
+        "trailing-comma": 0,
+        "max-line-length": 0,
+        "no-console": 0,
+        "max-classes-per-file": 0,
+        "object-literal-sort-keys": 0,
+        "@typescript-eslint/member-ordering": [1, {
+            "default": [
+                "public-static-field",
+                "private-static-field",
+                "public-instance-field",
+                "private-instance-field",
+                "public-constructor",
+                "private-constructor",
+                "public-instance-method",
+                "protected-instance-method",
+                "private-instance-method"
+            ]
+        }],
+        "@typescript-eslint/no-empty-interface": 1,
+        "@typescript-eslint/no-inferrable-types": 0
+    }
+}

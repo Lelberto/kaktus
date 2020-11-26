@@ -8,7 +8,7 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 servers:
   - description: SwaggerHub API Auto Mocking
-    url: "https://virtserver.swaggerhub.com/Lelberto/api-framework/1.0.0"
+    url: "https://virtserver.swaggerhub.com/Lelberto/kaktus/1.0.0"
   - url: "https://api.example.com/server1"
   - url: "https://api.example.com/server2"
 tags:

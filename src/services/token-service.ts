@@ -70,11 +70,11 @@ export interface TokenData {
 /**
  * Access token data interface.
  */
-// tslint:disable-next-line: no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AccessTokenData extends TokenData {}
 
 /**
  * Refresh token data interface.
  */
-// tslint:disable-next-line: no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RefreshTokenData extends TokenData {}

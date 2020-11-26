@@ -1,6 +1,6 @@
-# API Framework
-![Release](https://img.shields.io/github/v/release/Lelberto/api-framework?style=flat-square)
-![Express version](https://img.shields.io/github/package-json/dependency-version/Lelberto/api-framework/express?style=flat-square)
+# Kaktus
+![Release](https://img.shields.io/github/v/release/Lelberto/kaktus?style=flat-square)
+![Express version](https://img.shields.io/github/package-json/dependency-version/Lelberto/kaktus/express?style=flat-square)
 
 ## Usage
 - Download the latest version
