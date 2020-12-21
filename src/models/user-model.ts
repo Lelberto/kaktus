@@ -8,6 +8,7 @@ import Attributes from './model';
 export interface UserAttributes extends Attributes {
     name: string;
     password: string;
+    refreshToken?: string;
 }
 
 /**
@@ -42,6 +43,11 @@ function createUserSchema(container: ServiceContainer) {
             type: Schema.Types.String,
             required: [true, 'Password is required'],
             minlength: [8, 'Password is too small'],
+            select: false
+        },
+        refreshToken: {
+            type: Schema.Types.String,
+            default: null,
             select: false
         }
     }, {
