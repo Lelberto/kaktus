@@ -1,3 +1,4 @@
+import AuthenticationService from './authentication-service';
 import CacheService from './cache-service';
 import ConfigurationService from './configuration-service';
 import ControllerService from './controller-service';
@@ -42,6 +43,7 @@ export default class ServiceContainer {
     private _srv: ServerService;
     private _config: ConfigurationService;
     private _log: LogService;
+    private _auth: AuthenticationService;
     private _tokens: TokenService;
     private _crypto: CryptoService;
     private _errors: ErrorService;
@@ -59,6 +61,7 @@ export default class ServiceContainer {
         this._srv = null;
         this._config = null;
         this._log = null;
+        this._auth = null;
         this._tokens = null;
         this._crypto = null;
         this._errors = null;
@@ -121,6 +124,14 @@ export default class ServiceContainer {
             this._log.info('Loaded log service', { type: 'service-container' });
         }
         return this._log;
+    }
+
+    public get auth(): AuthenticationService {
+        if (!this._auth) {
+            this._auth = new AuthenticationService(this);
+            this.log.info('Loaded authentication service', { type: 'service-container' });
+        }
+        return this._auth;
     }
 
     public get tokens(): TokenService {
