@@ -52,7 +52,8 @@
       "node_modules"
     ],
     "watch": [
-      "src"
+      "src",
+      "config"
     ],
     "exec": "node --inspect=5858 -r ts-node/register ./src/app.ts",
     "ext": "ts"
