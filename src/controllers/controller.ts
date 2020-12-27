@@ -70,7 +70,7 @@ export default abstract class Controller extends Component {
      */
     private bindHandlers(endpoint: Endpoint) {
         if (_.isArray(endpoint.handlers)) {
-            (endpoint.handlers as RequestHandler[]).forEach(handler => handler.bind(this));
+            endpoint.handlers = (endpoint.handlers as RequestHandler[]).map(handler => handler.bind(this));
         } else {
             endpoint.handlers = (endpoint.handlers as RequestHandler).bind(this);
         }
