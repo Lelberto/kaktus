@@ -37,13 +37,7 @@ export default class ExpressService extends Service {
     public async start(port: number = 80): Promise<void> {
         return await new Promise<void>((resolve, reject) => {
             if (!this.srv || !this.srv.listening) {
-                this.srv = this.app.listen(port, err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                });
+                this.srv = this.app.listen(port, resolve);
             } else {
                 reject(new Error('Server is already started'));
             }

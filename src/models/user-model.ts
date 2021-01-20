@@ -6,9 +6,12 @@ import Attributes from './model';
  * User attributes interface.
  */
 export interface UserAttributes extends Attributes {
+
     [key: string]: string | Date | number | string[] | unknown;
+    email: string;
     name: string;
     password: string;
+    refreshToken?: string;
 }
 
 /**
@@ -34,6 +37,15 @@ export default function createModel(container: ServiceContainer, mongoose: Mongo
  */
 function createUserSchema(container: ServiceContainer) {
     const schema = new Schema({
+        email: {
+            type: Schema.Types.String,
+            required: [true, 'Email is required'],
+            unique: true,
+            validate: {
+                validator: (email: string) => /\S+@\S+\.\S+/.test(email),
+                message: 'Invalid email'
+            }
+        },
         name: {
             type: Schema.Types.String,
             required: [true, 'Name is required'],
@@ -44,6 +56,11 @@ function createUserSchema(container: ServiceContainer) {
             required: [true, 'Password is required'],
             minlength: [8, 'Password is too small'],
             select: false
+        },
+        refreshToken: {
+            type: Schema.Types.String,
+            default: null,
+            select: false
         }
     }, {
         timestamps: true,
@@ -53,7 +70,7 @@ function createUserSchema(container: ServiceContainer) {
 
     // Password hash validation
     schema.pre('save', async function(this: UserInstance, next) {
-        if (this.password != null) { // Validates the password only if filled
+        if (this.isNew && this.password != null) { // Validates the password only if filled
             try {
                 this.password = await container.crypto.hash(this.password, parseInt(process.env.HASH_SALT, 10));
                 return next();

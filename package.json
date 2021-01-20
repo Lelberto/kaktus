@@ -1,7 +1,8 @@
 {
   "main": "build/app.js",
   "scripts": {
-    "start": "tsc -p tsconfig.json && node build/app.js",
+    "start": "nodemon",
+    "build": "tsc",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
@@ -39,6 +40,22 @@
     "@types/yaml": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
-    "eslint": "^7.12.1"
+    "eslint": "^7.12.1",
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src",
+      "config"
+    ],
+    "exec": "node --inspect=5858 -r ts-node/register ./src/app.ts",
+    "ext": "ts"
   }
 }
