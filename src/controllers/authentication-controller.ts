@@ -43,7 +43,7 @@ export default class AuthenticationController extends Controller {
             });
             return res.status(200).json({ access_token: accessToken });
         } catch (err) {
-            return res.status(500).json(this.container.errors.formatServerError());
+            return res.status(500).json(this.container.errors.formatServerError(err));
         }
     }
 
@@ -82,7 +82,7 @@ export default class AuthenticationController extends Controller {
             await user.save();
             return res.status(200).json({ access_token: accessToken, refresh_token: refreshToken });
         } catch (err) {
-            return res.status(500).json(this.container.errors.formatServerError());
+            return res.status(500).json(this.container.errors.formatServerError(err));
         }
     }
 }

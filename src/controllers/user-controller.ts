@@ -37,7 +37,7 @@ export default class UserController extends Controller {
         try {
             return res.status(200).send({ users: await this.db.users.find() });
         } catch (err) {
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 
@@ -61,7 +61,7 @@ export default class UserController extends Controller {
             }
             return res.status(200).send({ user });
         } catch (err) {
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 
@@ -77,7 +77,8 @@ export default class UserController extends Controller {
     public async createHandler(req: Request, res: Response): Promise<Response> {
         try {
             const user = await this.db.users.create({
-                name: req.body.name,
+                email: req.body.email,
+                name: req.body.name.name.name,
                 password: req.body.password
             });
             return res.status(201).send({
@@ -92,7 +93,7 @@ export default class UserController extends Controller {
             if (err.name === 'ValidationError') {
                 return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 
@@ -114,6 +115,7 @@ export default class UserController extends Controller {
                     error_description: 'User not found'
                 }));
             }
+            user.email = req.body.email;
             user.name = req.body.name;
             user.password = req.body.password;
             await user.save();
@@ -129,7 +131,7 @@ export default class UserController extends Controller {
             if (err.name === 'ValidationError') {
                 return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 
@@ -151,6 +153,9 @@ export default class UserController extends Controller {
                     error_description: 'User not found'
                 }));
             }
+            if (req.body.email != null) {
+                user.email = req.body.email;
+            }
             if (req.body.name != null) {
                 user.name = req.body.name;
             }
@@ -170,7 +175,7 @@ export default class UserController extends Controller {
             if (err.name === 'ValidationError') {
                 return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
             }
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 
@@ -194,7 +199,7 @@ export default class UserController extends Controller {
             }
             return res.status(204).send();
         } catch (err) {
-            return res.status(500).send(this.container.errors.formatServerError());
+            return res.status(500).send(this.container.errors.formatServerError(err));
         }
     }
 }
