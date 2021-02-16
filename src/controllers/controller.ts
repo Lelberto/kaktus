@@ -14,67 +14,67 @@ import ServiceContainer from '../services/service-container';
  */
 export default abstract class Controller extends Component {
 
-    public readonly rootUri: string;
-    public readonly router: Router;
-    public readonly endpoints: Endpoint[];
-    protected readonly logger: LogService; // Alias for `this.container.log`
-    protected readonly db: DatabaseService; // Alias for `this.container.db`
+  public readonly rootUri: string;
+  public readonly router: Router;
+  public readonly endpoints: Endpoint[];
+  protected readonly logger: LogService; // Alias for `this.container.log`
+  protected readonly db: DatabaseService; // Alias for `this.container.db`
 
-    /**
-     * Creates a new controller.
-     * 
-     * @param container Services container
-     * @param rootUri Root URI
-     */
-    public constructor(container: ServiceContainer, rootUri: string) {
-        super(container);
-        this.rootUri = rootUri;
-        this.router = Router();
-        this.endpoints = [];
-        this.logger = container.log;
-        this.db = container.db;
-    }
+  /**
+   * Creates a new controller.
+   * 
+   * @param container Services container
+   * @param rootUri Root URI
+   */
+  public constructor(container: ServiceContainer, rootUri: string) {
+    super(container);
+    this.rootUri = rootUri;
+    this.router = Router();
+    this.endpoints = [];
+    this.logger = container.log;
+    this.db = container.db;
+  }
 
-    /**
-     * Registers an endpoint.
-     * 
-     * @param endpoint Endpoint to register
-     */
-    protected registerEndpoint(endpoint: Endpoint): void {
-        this.endpoints.push(endpoint);
-        this.bindHandlers(endpoint);
-        switch (endpoint.method) {
-            default:
-            case 'GET':
-                this.router.get(endpoint.uri, endpoint.handlers);
-                break;
-            case 'POST':
-                this.router.post(endpoint.uri, endpoint.handlers);
-                break;
-            case 'PUT':
-                this.router.put(endpoint.uri, endpoint.handlers);
-                break;
-            case 'PATCH':
-                this.router.patch(endpoint.uri, endpoint.handlers);
-                break;
-            case 'DELETE':
-                this.router.delete(endpoint.uri, endpoint.handlers);
-                break;
-        }
+  /**
+   * Registers an endpoint.
+   * 
+   * @param endpoint Endpoint to register
+   */
+  protected registerEndpoint(endpoint: Endpoint): void {
+    this.endpoints.push(endpoint);
+    this.bindHandlers(endpoint);
+    switch (endpoint.method) {
+      default:
+      case 'GET':
+        this.router.get(endpoint.uri, endpoint.handlers);
+        break;
+      case 'POST':
+        this.router.post(endpoint.uri, endpoint.handlers);
+        break;
+      case 'PUT':
+        this.router.put(endpoint.uri, endpoint.handlers);
+        break;
+      case 'PATCH':
+        this.router.patch(endpoint.uri, endpoint.handlers);
+        break;
+      case 'DELETE':
+        this.router.delete(endpoint.uri, endpoint.handlers);
+        break;
     }
+  }
 
-    /**
-     * Binds endpoint's handlers to access to `this`.
-     * 
-     * @param endpoint Endpoint to bind
-     */
-    private bindHandlers(endpoint: Endpoint) {
-        if (_.isArray(endpoint.handlers)) {
-            endpoint.handlers = (endpoint.handlers as RequestHandler[]).map(handler => handler.bind(this));
-        } else {
-            endpoint.handlers = (endpoint.handlers as RequestHandler).bind(this);
-        }
+  /**
+   * Binds endpoint's handlers to access to `this`.
+   * 
+   * @param endpoint Endpoint to bind
+   */
+  private bindHandlers(endpoint: Endpoint) {
+    if (_.isArray(endpoint.handlers)) {
+      endpoint.handlers = (endpoint.handlers as RequestHandler[]).map(handler => handler.bind(this));
+    } else {
+      endpoint.handlers = (endpoint.handlers as RequestHandler).bind(this);
     }
+  }
 }
 
 /**
@@ -86,17 +86,17 @@ export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
  * Endpoint interface.
  */
 export interface Endpoint {
-    method: Method;
-    uri: string;
-    handlers: RequestHandler | RequestHandler[];
-    description?: string;
+  method: Method;
+  uri: string;
+  handlers: RequestHandler | RequestHandler[];
+  description?: string;
 }
 
 /**
  * HATEOAS Link interface.
  */
 export interface Link {
-    rel: string;
-    action: Method;
-    href: string;
+  rel: string;
+  action: Method;
+  href: string;
 }

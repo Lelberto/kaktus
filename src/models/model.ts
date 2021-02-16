@@ -4,8 +4,8 @@ import { Schema } from 'mongoose';
  * Base model attributes interface.
  */
 export default interface Attributes {
-    createdAt?: Date;
-    updatedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 /**
@@ -17,11 +17,11 @@ export default interface Attributes {
  * @param options Plugin options
  */
 export function expirePlugin(schema: Schema, options: { expires: number }): void {
-    schema.add({
-        expiration: {
-            type: Schema.Types.Date,
-            default: new Date(),
-            expires: options.expires
-        }
-    });
+  schema.add({
+    expiration: {
+      type: Schema.Types.Date,
+      default: new Date(),
+      expires: options.expires
+    }
+  });
 }

@@ -7,9 +7,9 @@ import ServiceContainer from './services/service-container';
  */
 export default abstract class Component {
 
-    protected readonly container: ServiceContainer;
+  protected readonly container: ServiceContainer;
 
-    public constructor(container: ServiceContainer) {
-        this.container = container;
-    }
+  public constructor(container: ServiceContainer) {
+    this.container = container;
+  }
 }

@@ -10,12 +10,12 @@ import ServiceContainer from './service-container';
  */
 export default abstract class Service extends Component {
 
-    /**
-     * Creates a new service.
-     * 
-     * @param container Services container
-     */
-    public constructor(container: ServiceContainer) {
-        super(container);
-    }
+  /**
+   * Creates a new service.
+   * 
+   * @param container Services container
+   */
+  public constructor(container: ServiceContainer) {
+    super(container);
+  }
 }
