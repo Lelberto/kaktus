@@ -10,52 +10,52 @@ import ServiceContainer from './service-container';
  */
 export default class DatabaseService extends Service {
 
-    public readonly users: Model<UserInstance>;
-    private readonly mongoose: Mongoose;
+  public readonly users: Model<UserInstance>;
+  private readonly mongoose: Mongoose;
 
-    /**
-     * Creates a new database service.
-     * 
-     * @param container Services container
-     */
-    public constructor(container: ServiceContainer) {
-        super(container);
-        this.mongoose = this.createMongoose();
-        this.users = createUserModel(container, this.mongoose);
-    }
+  /**
+   * Creates a new database service.
+   * 
+   * @param container Services container
+   */
+  public constructor(container: ServiceContainer) {
+    super(container);
+    this.mongoose = this.createMongoose();
+    this.users = createUserModel(container, this.mongoose);
+  }
 
-    /**
-     * Connects to a database.
-     * 
-     * @param host Host
-     * @param port Port
-     * @param dbName Database name
-     * @async
-     */
-    public async connect(host: string, port: string | number, dbName: string): Promise<void> {
-        await this.mongoose.connect(`mongodb://${host}:${port}/${dbName}`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-    }
+  /**
+   * Connects to a database.
+   * 
+   * @param host Host
+   * @param port Port
+   * @param dbName Database name
+   * @async
+   */
+  public async connect(host: string, port: string | number, dbName: string): Promise<void> {
+    await this.mongoose.connect(`mongodb://${host}:${port}/${dbName}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+  }
 
-    /**
-     * Disconnects from a database.
-     * 
-     * @async
-     */
-    public async disconnect(): Promise<void> {
-        await this.mongoose.disconnect();
-    }
+  /**
+   * Disconnects from a database.
+   * 
+   * @async
+   */
+  public async disconnect(): Promise<void> {
+    await this.mongoose.disconnect();
+  }
 
-    /**
-     * Creates Mongoose instance.
-     * 
-     * @returns Mongoose instance
-     */
-    private createMongoose(): Mongoose {
-        const mongoose = new Mongoose();
-        mongoose.set('useCreateIndex', true);
-        return mongoose;
-    }
+  /**
+   * Creates Mongoose instance.
+   * 
+   * @returns Mongoose instance
+   */
+  private createMongoose(): Mongoose {
+    const mongoose = new Mongoose();
+    mongoose.set('useCreateIndex', true);
+    return mongoose;
+  }
 }

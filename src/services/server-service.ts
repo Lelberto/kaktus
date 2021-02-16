@@ -8,47 +8,47 @@ import ServiceContainer from './service-container';
  */
 export default class ServerService extends Service {
 
-    /**
-     * Creates a new server service.
-     * 
-     * @param container Services container
-     */
-    public constructor(container: ServiceContainer) {
-        super(container);
-    }
+  /**
+   * Creates a new server service.
+   * 
+   * @param container Services container
+   */
+  public constructor(container: ServiceContainer) {
+    super(container);
+  }
 
-    /**
-     * Starts the server.
-     * 
-     * @async
-     */
-    public async start(): Promise<void> {
-        const { API_PORT, DB_HOST, DB_PORT, DB_NAME } = process.env;
+  /**
+   * Starts the server.
+   * 
+   * @async
+   */
+  public async start(): Promise<void> {
+    const { API_PORT, DB_HOST, DB_PORT, DB_NAME } = process.env;
 
-        // Starting server
-        await this.container.express.start(API_PORT as unknown as number);
-        this.container.log.info('Express started');
+    // Starting server
+    await this.container.express.start(API_PORT as unknown as number);
+    this.container.log.info('Express started');
 
-        // Connecting to database
-        await this.container.db.connect(DB_HOST, DB_PORT, DB_NAME);
-        this.container.log.info(`Connected to database ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
-    }
+    // Connecting to database
+    await this.container.db.connect(DB_HOST, DB_PORT, DB_NAME);
+    this.container.log.info(`Connected to database ${DB_HOST}:${DB_PORT}/${DB_NAME}`);
+  }
 
-    /**
-     * Stops the server.
-     * 
-     * @async
-     */
-    public async stop(): Promise<void> {
-        // Stopping all tasks
-        this.container.scheduler.stopAllTasks();
+  /**
+   * Stops the server.
+   * 
+   * @async
+   */
+  public async stop(): Promise<void> {
+    // Stopping all tasks
+    this.container.scheduler.stopAllTasks();
 
-        // Stopping server
-        await this.container.express.stop();
-        this.container.log.info('Server stopped');
+    // Stopping server
+    await this.container.express.stop();
+    this.container.log.info('Server stopped');
 
-        // Disconnecting from database
-        await this.container.db.disconnect();
-        this.container.log.info('Disconnected from database');
-    }
+    // Disconnecting from database
+    await this.container.db.disconnect();
+    this.container.log.info('Disconnected from database');
+  }
 }
