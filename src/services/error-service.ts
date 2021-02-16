@@ -54,7 +54,9 @@ export default class ErrorService extends Service {
      * @returns Formated generic server error
      */
     public formatServerError(error?: Error, errorUri?: string): APIErrorResponse {
-        this.container.log.error(error.message);
+        if (error != null) {
+            this.container.log.error(error.message);
+        }
         return this.formatErrors({
             error: 'server_error',
             error_description: 'Internal server error',
