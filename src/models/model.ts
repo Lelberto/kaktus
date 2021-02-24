@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 
 /**
- * Base model attributes interface.
+ * Base model attributes.
  */
 export default interface Attributes {
   createdAt?: Date;

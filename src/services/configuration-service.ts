@@ -83,7 +83,7 @@ export default class ConfigurationService extends Service {
 export type ConfigurationType = 'JSON' | 'YAML';
 
 /**
- * API configuration interface.
+ * API configuration.
  */
 export interface APIConfiguration {
   requestSizeLimit: string;
@@ -91,7 +91,7 @@ export interface APIConfiguration {
 }
 
 /**
- * Services configuration interface.
+ * Services configuration.
  */
 export interface ServicesConfiguration {
   log: {
