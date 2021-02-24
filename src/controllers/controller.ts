@@ -83,7 +83,7 @@ export default abstract class Controller extends Component {
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 /**
- * Endpoint interface.
+ * Endpoint.
  */
 export interface Endpoint {
   method: Method;
@@ -93,7 +93,7 @@ export interface Endpoint {
 }
 
 /**
- * HATEOAS Link interface.
+ * HATEOAS Link.
  */
 export interface Link {
   rel: string;

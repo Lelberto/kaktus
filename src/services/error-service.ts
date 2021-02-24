@@ -83,7 +83,7 @@ export default class ErrorService extends Service {
 }
 
 /**
- * API error interface.
+ * API error.
  */
 export interface APIError {
   error: ErrorCode;
@@ -92,7 +92,7 @@ export interface APIError {
 }
 
 /**
- * API error response interface.
+ * API error response.
  */
 export interface APIErrorResponse {
   errors: APIError[];

@@ -60,20 +60,20 @@ export default class TokenService extends Service {
 }
 
 /**
- * Token data interface.
+ * Token data.
  */
 export interface TokenData {
   userId?: string;
 }
 
 /**
- * Access token data interface.
+ * Access token data.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AccessTokenData extends TokenData {}
 
 /**
- * Refresh token data interface.
+ * Refresh token data.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RefreshTokenData extends TokenData {}

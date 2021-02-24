@@ -108,12 +108,12 @@ export default class LogService extends Service {
 }
 
 /**
- * Log severity type.
+ * Log severity.
  */
 export type LogSeverity = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
 
 /**
- * Log options interface.
+ * Log options.
  */
 export interface LogOptions {
   type?: 'logs' | 'service-container' | 'endpoints' | 'cache';

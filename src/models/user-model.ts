@@ -3,7 +3,7 @@ import ServiceContainer from '../services/service-container';
 import Attributes from './model';
 
 /**
- * User attributes interface.
+ * User attributes.
  */
 export interface UserAttributes extends Attributes {
   email: string;
@@ -13,7 +13,7 @@ export interface UserAttributes extends Attributes {
 }
 
 /**
- * User instance interface.
+ * User instance.
  */
 export interface UserInstance extends UserAttributes, Document {}
 
