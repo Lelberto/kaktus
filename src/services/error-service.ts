@@ -49,14 +49,10 @@ export default class ErrorService extends Service {
   /**
    * Formats the generic server error to JSON response.
    * 
-   * @param error Triggered error
    * @param errorUri Documentation URI error
    * @returns Formated generic server error
    */
-  public formatServerError(error?: Error, errorUri?: string): APIErrorResponse {
-    if (error != null) {
-      this.logger.error(error.message);
-    }
+  public formatServerError(errorUri?: string): APIErrorResponse {
     return this.formatErrors({
       error: 'server_error',
       error_description: 'Internal server error',
@@ -104,7 +100,7 @@ export interface APIErrorResponse {
  * Error code type.
  */
 export type ErrorCode =
-  'access_denied'
+    'access_denied'
   | 'invalid_client'
   | 'invalid_grant'
   | 'invalid_request'
