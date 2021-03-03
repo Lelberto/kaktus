@@ -9,19 +9,19 @@ import ServiceContainer from './service-container';
  */
 export default class EnvironmentService extends Service {
 
-    /**
-     * Creates a new environment service.
-     * 
-     * @param container Services container
-     */
-    public constructor(container: ServiceContainer) {
-        super(container);
-    }
+  /**
+   * Creates a new environment service.
+   * 
+   * @param container Services container
+   */
+  public constructor(container: ServiceContainer) {
+    super(container);
+  }
 
-    /**
-     * Loads environment.
-     */
-    public load(): void {
-        dotenv.config();
-    }
+  /**
+   * Loads environment.
+   */
+  public load(): void {
+    dotenv.config();
+  }
 }
