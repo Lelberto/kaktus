@@ -92,15 +92,15 @@ export default class ExpressService extends Service {
 
     // Logging request and response
     app.use(mung.json((body, req, res) => {
-      this.container.log.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
-      this.container.log.info(body, { type: 'endpoints' });
+      this.logger.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
+      this.logger.info(body, { type: 'endpoints' });
     }, { mungError: true }));
 
     // Swagger documentation
     const docRoute = this.container.config.api.documentationRoute;
     if (docRoute != null) {
       app.use(docRoute, swagger.serve, swagger.setup(this.container.config.loadSync('config/swagger.yml', 'YAML')));
-      this.container.log.info('Loaded Swagger documentation');
+      this.logger.info('Loaded Swagger documentation');
     }
 
     // Registering controllers

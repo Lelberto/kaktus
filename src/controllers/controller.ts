@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { RequestHandler, Router } from 'express';
 import Component from '../component';
-import DatabaseService from '../services/database-service';
-import LogService from '../services/log-service';
 import ServiceContainer from '../services/service-container';
 
 /**
@@ -17,8 +15,6 @@ export default abstract class Controller extends Component {
   public readonly rootUri: string;
   public readonly router: Router;
   public readonly endpoints: Endpoint[];
-  protected readonly logger: LogService; // Alias for `this.container.log`
-  protected readonly db: DatabaseService; // Alias for `this.container.db`
 
   /**
    * Creates a new controller.
@@ -31,8 +27,6 @@ export default abstract class Controller extends Component {
     this.rootUri = rootUri;
     this.router = Router();
     this.endpoints = [];
-    this.logger = container.log;
-    this.db = container.db;
   }
 
   /**
