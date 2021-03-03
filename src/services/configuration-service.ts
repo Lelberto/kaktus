@@ -96,6 +96,8 @@ export interface APIConfiguration {
 export interface ServicesConfiguration {
   log: {
     dateFormat: string;
+    datetimeFormat: string;
+    jsonIndent: number;
   };
   cache: {
     ttl: number;

@@ -1,5 +1,7 @@
 log:
-  dateFormat: "yyyy-mm-dd HH:MM:ss"
+  dateFormat: "YYYY-MM-DD"
+  datetimeFormat: "YYYY-MM-DD HH:mm:ss"
+  jsonIndent: 2
 cache:
   ttl: 300
   checkPeriod: 600
