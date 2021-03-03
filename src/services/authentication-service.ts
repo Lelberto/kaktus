@@ -10,6 +10,11 @@ import { AccessTokenData } from './token-service';
  */
 export default class AuthenticationService extends Service {
 
+  /**
+   * Creates a new authentication service.
+   * 
+   * @param container Services container
+   */
   public constructor(container: ServiceContainer) {
     super(container);
   }
@@ -27,7 +32,7 @@ export default class AuthenticationService extends Service {
    * @async
    */
   public async authenticateHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const token = req.headers['x-access-token'] as string;
+    const token = req.headers?.authorization?.split(' ')[1];
     if (token != null) {
       try {
         const data = await this.container.tokens.decode<AccessTokenData>(token, process.env.ACCESS_TOKEN_KEY);
