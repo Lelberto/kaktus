@@ -1,5 +1,5 @@
-import dateFormat from 'dateformat';
 import fs from 'fs';
+import moment from 'moment';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -10,111 +10,104 @@ import ServiceContainer from './service-container';
  */
 export default class LogService extends Service {
 
-    /**
-     * Creates a new log service.
-     * 
-     * @param container Services container
-     */
-    public constructor(container: ServiceContainer) {
-        super(container);
-    }
+  /**
+   * Creates a new log service.
+   * 
+   * @param container Services container
+   */
+  public constructor(container: ServiceContainer) {
+    super(container);
+  }
 
-    /**
-     * Logs a message.
-     * 
-     * @param msg Message to log
-     * @param severity Log severity
-     * @param options Log options
-     */
-    public log(msg: unknown, severity: LogSeverity = 'INFO', options: LogOptions = { type: 'logs' }): void {
-        const now = Date.now();
-        const fullMsg = `[${dateFormat(now, this.container.config.services.log.dateFormat)} - ${severity}] ${(typeof msg === 'object') ? JSON.stringify(msg) : msg}`;
-        switch (severity) {
-            default:
-                console.log(fullMsg);
-                break;
-            case 'INFO':
-                console.info(fullMsg);
-                break;
-            case 'WARN':
-                console.warn(fullMsg);
-                break;
-            case 'ERROR':
-                console.error(fullMsg);
-                if (msg instanceof Error) {
-                    console.error(msg);
-                }
-                break;
-            case 'DEBUG':
-                console.debug(fullMsg);
-                break;
-        }
-        this.write(now, options, fullMsg);
+  /**
+   * Logs a message.
+   * 
+   * It is recommended to use specific methods to log a message instead of this method :
+   * - `info(...msg)` to log an information message
+   * - `warn(...msg)` to log a warning message
+   * - `error(...msg)` to log an error message
+   * - `debug(...msg)` to log a debug message
+   * 
+   * @param severity Log severity
+   * @param msg Message to log
+   */
+  public log(severity: LogSeverity = 'INFO', ...msg: unknown[]): void {
+    const now = new Date();
+    const dateFormat = moment(now).format(this.container.config.services.log.dateFormat);
+    const datetimeFormat = moment(now).format(this.container.config.services.log.datetimeFormat);
+    const prefix = `[${datetimeFormat} - ${severity}]`;
+    switch (severity) {
+      default:
+        console.log(prefix, ...msg);
+        break;
+      case 'INFO':
+        console.info(prefix, ...msg);
+        break;
+      case 'WARN':
+        console.warn(prefix, ...msg);
+        break;
+      case 'ERROR':
+        console.error(prefix, ...msg);
+        break;
+      case 'DEBUG':
+        console.debug(prefix, ...msg);
+        break;
     }
+    this.write(dateFormat, prefix, ...msg);
+  }
 
-    /**
-     * Logs an information message.
-     * 
-     * @param msg Message to log
-     * @param options Log options
-     */
-    public info(msg: unknown, options: LogOptions = { type: 'logs' }): void {
-        this.log(msg, 'INFO', options);
-    }
+  /**
+   * Logs an information message.
+   * 
+   * @param msg Message to log
+   */
+  public info(...msg: unknown[]): void {
+    this.log('INFO', ...msg);
+  }
 
-    /**
-     * Logs a warning message.
-     * 
-     * @param msg Message to log
-     * @param options Log options
-     */
-    public warn(msg: unknown, options: LogOptions = { type: 'logs' }): void {
-        this.log(msg, 'WARN', options);
-    }
+  /**
+   * Logs a warning message.
+   * 
+   * @param msg Message to log
+   */
+  public warn(...msg: unknown[]): void {
+    this.log('WARN', ...msg);
+  }
 
-    /**
-     * Logs an error message.
-     * 
-     * @param msg Message to log
-     * @param options Log options
-     */
-    public error(msg: unknown, options: LogOptions = { type: 'logs' }): void {
-        this.log(msg, 'ERROR', options);
-    }
+  /**
+   * Logs an error message.
+   * 
+   * @param msg Message to log
+   */
+  public error(...msg: unknown[]): void {
+    this.log('ERROR', ...msg);
+  }
 
-    /**
-     * Logs a debug message.
-     * 
-     * @param msg Message to log
-     * @param options Log options
-     */
-    public debug(msg: unknown, options: LogOptions = { type: 'logs' }): void {
-        this.log(msg, 'DEBUG', options);
-    }
+  /**
+   * Logs a debug message.
+   * 
+   * @param msg Message to log
+   */
+  public debug(...msg: unknown[]): void {
+    this.log('DEBUG', ...msg);
+  }
 
-    /**
-     * Write a log message to the specified log file.
-     * 
-     * @param date Date
-     * @param type Log type (to write to the desired file)
-     * @param msg Log message
-     */
-    private write(date: number, options: LogOptions, msg: unknown): void {
-        if (!fs.existsSync('logs')) {
-            fs.mkdirSync('logs');
-        }
-        fs.appendFileSync(`logs/${options.type != null ? options.type : 'logs'}_${dateFormat(date, 'yyyy-mm-dd')}.log`, `${msg}\n`);
+  /**
+   * Write a log message to the specified log file.
+   * 
+   * @param dateFormat Date format for the file name
+   * @param msg Log message
+   */
+  private write(dateFormat: string, ...msg: unknown[]): void {
+    if (!fs.existsSync('logs')) {
+      fs.mkdirSync('logs');
     }
+    const fullMsg = msg.map(part => part instanceof Object ? `\n${JSON.stringify(part, null, this.container.config.services.log.jsonIndent)}` : part).join(' ');
+    fs.appendFileSync(`logs/logs_${dateFormat}.log`, `${fullMsg}\n`);
+  }
 }
 
 /**
- * Log severity type.
+ * Log severity.
  */
 export type LogSeverity = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
-
-/**
- * Log options interface.
- */
-export interface LogOptions {
-    type?: 'logs' | 'service-container' | 'endpoints' | 'cache';
-}

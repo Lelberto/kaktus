@@ -1,5 +1,0 @@
-log:
-  dateFormat: "yyyy-mm-dd HH:MM:ss"
-cache:
-  ttl: 300
-  checkPeriod: 600

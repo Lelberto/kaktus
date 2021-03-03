@@ -1,3 +1,5 @@
+import DatabaseService from './services/database-service';
+import LogService from './services/log-service';
 import ServiceContainer from './services/service-container';
 
 /**
@@ -7,9 +9,23 @@ import ServiceContainer from './services/service-container';
  */
 export default abstract class Component {
 
-    protected readonly container: ServiceContainer;
+  protected readonly container: ServiceContainer;
 
-    public constructor(container: ServiceContainer) {
-        this.container = container;
-    }
+  public constructor(container: ServiceContainer) {
+    this.container = container;
+  }
+
+  /**
+   * Alias for `this.container.log`
+   */
+  protected get logger(): LogService {
+      return this.container.log;
+  }
+
+  /**
+   * Alias for `this.container.db`
+   */
+  protected get db(): DatabaseService {
+      return this.container.db;
+  }
 }

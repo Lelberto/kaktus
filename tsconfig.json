@@ -1,19 +1,17 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "ESNext",
-        "rootDir": "src/",
-        "outDir": "build/",
-        "sourceMap": true,
-        "esModuleInterop": true,
-        "typeRoots": ["types/"],
-        "strict": true,
-        "strictNullChecks": false
-    },
-    "ts-node": {
-        "files": true
-    },
-    "files": [
-        "types/nodejs.d.ts"
-    ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ESNext",
+    "rootDir": "src/",
+    "outDir": "build/",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "typeRoots": ["types/"],
+    "strict": true,
+    "strictNullChecks": false
+  },
+  "ts-node": {
+    "files": true
+  },
+  "files": ["types/nodejs.d.ts"]
 }
