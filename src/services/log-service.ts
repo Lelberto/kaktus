@@ -22,6 +22,12 @@ export default class LogService extends Service {
   /**
    * Logs a message.
    * 
+   * It is recommended to use specific methods to log a message instead of this method :
+   * - `info(...msg)` to log an information message
+   * - `warn(...msg)` to log a warning message
+   * - `error(...msg)` to log an error message
+   * - `debug(...msg)` to log a debug message
+   * 
    * @param severity Log severity
    * @param msg Message to log
    */
