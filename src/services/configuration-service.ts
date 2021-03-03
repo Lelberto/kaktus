@@ -102,5 +102,6 @@ export interface ServicesConfiguration {
   cache: {
     ttl: number;
     checkPeriod: number;
+    useClones: boolean;
   };
 }

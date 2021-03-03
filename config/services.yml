@@ -5,3 +5,4 @@ log:
 cache:
   ttl: 300
   checkPeriod: 600
+  useClones: false
