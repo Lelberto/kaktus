@@ -8,5 +8,4 @@
 - Install TypeScript globally with `npm i -g typescript`
 - Add your information in `package.json` (project name, description, author, etc...)
 - Create a `.env` file like `.example.env` with yours parameters
-- Do the same thing with configuration files `config/*.example.yml` with your configuration
 - Execute `npm i` and `npm start`
