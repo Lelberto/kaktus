@@ -92,8 +92,8 @@ export default class ExpressService extends Service {
 
     // Logging request and response
     app.use(mung.json((body, req, res) => {
-      this.logger.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`, { type: 'endpoints' });
-      this.logger.info(body, { type: 'endpoints' });
+      this.logger.info(`${req.ip} > Requested ${req.method} ${req.originalUrl} in ${Date.now() - res.locals.data.start} ms`);
+      this.logger.info(body);
     }, { mungError: true }));
 
     // Swagger documentation

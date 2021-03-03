@@ -73,7 +73,7 @@ export default class ServiceContainer {
   public get env(): EnvironmentService {
     if (!this._env) {
       this._env = new EnvironmentService(this);
-      this.log.info('Loaded environment service', { type: 'service-container' });
+      this.log.info('Loaded environment service');
     }
     return this._env;
   }
@@ -81,7 +81,7 @@ export default class ServiceContainer {
   public get express(): ExpressService {
     if (!this._express) {
       this._express = new ExpressService(this);
-      this.log.info('Loaded Express service', { type: 'service-container' });
+      this.log.info('Loaded Express service');
     }
     return this._express;
   }
@@ -89,7 +89,7 @@ export default class ServiceContainer {
   public get controllers(): ControllerService {
     if (!this._controllers) {
       this._controllers = new ControllerService(this);
-      this.log.info('Loaded controllers service', { type: 'service-container' });
+      this.log.info('Loaded controllers service');
     }
     return this._controllers;
   }
@@ -97,7 +97,7 @@ export default class ServiceContainer {
   public get db(): DatabaseService {
     if (!this._db) {
       this._db = new DatabaseService(this);
-      this.log.info('Loaded database service', { type: 'service-container' });
+      this.log.info('Loaded database service');
     }
     return this._db;
   }
@@ -105,7 +105,7 @@ export default class ServiceContainer {
   public get srv(): ServerService {
     if (!this._srv) {
       this._srv = new ServerService(this);
-      this.log.info('Loaded server service', { type: 'service-container' });
+      this.log.info('Loaded server service');
     }
     return this._srv;
   }
@@ -113,7 +113,7 @@ export default class ServiceContainer {
   public get config(): ConfigurationService {
     if (!this._config) {
       this._config = new ConfigurationService(this);
-      this.log.info('Loaded configuration service', { type: 'service-container' });
+      this.log.info('Loaded configuration service');
     }
     return this._config;
   }
@@ -121,7 +121,7 @@ export default class ServiceContainer {
   public get log(): LogService {
     if (!this._log) {
       this._log = new LogService(this);
-      this._log.info('Loaded log service', { type: 'service-container' });
+      this._log.info('Loaded log service');
     }
     return this._log;
   }
@@ -129,7 +129,7 @@ export default class ServiceContainer {
   public get auth(): AuthenticationService {
     if (!this._auth) {
       this._auth = new AuthenticationService(this);
-      this.log.info('Loaded authentication service', { type: 'service-container' });
+      this.log.info('Loaded authentication service');
     }
     return this._auth;
   }
@@ -137,7 +137,7 @@ export default class ServiceContainer {
   public get tokens(): TokenService {
     if (!this._tokens) {
       this._tokens = new TokenService(this);
-      this.log.info('Loaded tokens service', { type: 'service-container' });
+      this.log.info('Loaded tokens service');
     }
     return this._tokens;
   }
@@ -145,7 +145,7 @@ export default class ServiceContainer {
   public get crypto(): CryptoService {
     if (!this._crypto) {
       this._crypto = new CryptoService(this);
-      this.log.info('Loaded crypto service', { type: 'service-container' });
+      this.log.info('Loaded crypto service');
     }
     return this._crypto;
   }
@@ -153,7 +153,7 @@ export default class ServiceContainer {
   public get errors(): ErrorService {
     if (!this._errors) {
       this._errors = new ErrorService(this);
-      this.log.info('Loaded errors service', { type: 'service-container' });
+      this.log.info('Loaded errors service');
     }
     return this._errors;
   }
@@ -161,7 +161,7 @@ export default class ServiceContainer {
   public get cache(): CacheService {
     if (!this._cache) {
       this._cache = new CacheService(this);
-      this.log.info('Loaded cache service', { type: 'service-container' });
+      this.log.info('Loaded cache service');
     }
     return this._cache;
   }
@@ -169,7 +169,7 @@ export default class ServiceContainer {
   public get scheduler(): SchedulerService {
     if (!this._scheduler) {
       this._scheduler = new SchedulerService(this);
-      this.log.info('Loaded scheduler service', { type: 'service-container' });
+      this.log.info('Loaded scheduler service');
     }
     return this._scheduler;
   }

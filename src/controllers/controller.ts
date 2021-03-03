@@ -14,7 +14,7 @@ export default abstract class Controller extends Component {
 
   public readonly rootUri: string;
   public readonly router: Router;
-  public readonly endpoints: Endpoint[];
+  public readonly endpoints: EndpointExtended[];
 
   /**
    * Creates a new controller.
@@ -35,24 +35,29 @@ export default abstract class Controller extends Component {
    * @param endpoint Endpoint to register
    */
   protected registerEndpoint(endpoint: Endpoint): void {
-    this.endpoints.push(endpoint);
+    const endpointExtended: EndpointExtended = { ...endpoint, calledCount: 0 };
+    const updateStatMiddleware: RequestHandler = (req, res, next) => {
+      this.updateStat(endpointExtended);
+      return next();
+    };
+    this.endpoints.push(endpointExtended);
     this.bindHandlers(endpoint);
     switch (endpoint.method) {
       default:
       case 'GET':
-        this.router.get(endpoint.uri, endpoint.handlers);
+        this.router.get(endpoint.uri, updateStatMiddleware, endpoint.handlers);
         break;
       case 'POST':
-        this.router.post(endpoint.uri, endpoint.handlers);
+        this.router.post(endpoint.uri, updateStatMiddleware, endpoint.handlers);
         break;
       case 'PUT':
-        this.router.put(endpoint.uri, endpoint.handlers);
+        this.router.put(endpoint.uri, updateStatMiddleware, endpoint.handlers);
         break;
       case 'PATCH':
-        this.router.patch(endpoint.uri, endpoint.handlers);
+        this.router.patch(endpoint.uri, updateStatMiddleware, endpoint.handlers);
         break;
       case 'DELETE':
-        this.router.delete(endpoint.uri, endpoint.handlers);
+        this.router.delete(endpoint.uri, updateStatMiddleware, endpoint.handlers);
         break;
     }
   }
@@ -69,6 +74,15 @@ export default abstract class Controller extends Component {
       endpoint.handlers = (endpoint.handlers as RequestHandler).bind(this);
     }
   }
+
+  /**
+   * Updates endpoint statistics.
+   * 
+   * @param endpoint Endpoint to update
+   */
+  private updateStat(endpoint: EndpointExtended): void {
+    endpoint.calledCount++;
+  }
 }
 
 /**
@@ -84,6 +98,15 @@ export interface Endpoint {
   uri: string;
   handlers: RequestHandler | RequestHandler[];
   description?: string;
+}
+
+/**
+ * Endpoint extended.
+ * 
+ * This endpoint has additional statistic fields.
+ */
+export interface EndpointExtended extends Endpoint {
+  calledCount: number;
 }
 
 /**

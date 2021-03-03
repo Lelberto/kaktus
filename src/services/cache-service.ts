@@ -61,9 +61,7 @@ export default class CacheService extends Service {
    * @returns Value, or `undefined` if no value exists
    */
   public take<T>(key: string): T {
-    const value = this.get<T>(key);
-    this.del(key);
-    return value;
+    return this.take<T>(key);
   }
 
   /**
@@ -101,7 +99,7 @@ export default class CacheService extends Service {
     return new NodeCache({
       stdTTL: this.container.config.services.cache.ttl,
       checkperiod: this.container.config.services.cache.checkPeriod,
-      useClones: false
+      useClones: this.container.config.services.cache.useClones
     });
   }
 
@@ -112,16 +110,16 @@ export default class CacheService extends Service {
    */
   private createEvents(): void {
     this.cache.on('set', (key: string, value) => {
-      this.logger.info(`Stored key "${key}" with value "${value}"`, { type: 'cache' });
+      this.logger.info('Stored key', key, 'with value', value);
     });
     this.cache.on('del', (key: string, value) => {
-      this.logger.info(`Deleted key "${key}" with value "${value}"`, { type: 'cache' });
+      this.logger.info('Deleted key', key, 'with value', value);
     });
     this.cache.on('expired', (key: string, value) => {
-      this.logger.info(`Expired key "${key}" with value "${value}"`, { type: 'cache' });
+      this.logger.info('Expired key', key, 'with value', value);
     });
     this.cache.on('flush', () => {
-      this.logger.info('Cache flushed', { type: 'cache' });
+      this.logger.info('Cache flushed');
     });
   }
 }
