@@ -55,7 +55,7 @@ export default class ErrorService extends Service {
    */
   public formatServerError(error?: Error, errorUri?: string): APIErrorResponse {
     if (error != null) {
-      this.container.log.error(error.message);
+      this.logger.error(error.message);
     }
     return this.formatErrors({
       error: 'server_error',
