@@ -23,11 +23,17 @@ export default class ServerService extends Service {
    * @async
    */
   public async start(): Promise<void> {
-    const { API_PORT, DB_HOST, DB_PORT, DB_NAME } = process.env;
+    const { API_PORT, WEBSOCKET_PORT, DB_HOST, DB_PORT, DB_NAME } = process.env;
 
     // Starting server
     await this.container.express.start(API_PORT as unknown as number);
     this.logger.info('Express started');
+
+    // Starting websocket server
+    if (WEBSOCKET_PORT as unknown as number >= 0) {
+      this.container.websocket.start(WEBSOCKET_PORT as unknown as number);
+      this.logger.info(`Websocket server listening on port ${WEBSOCKET_PORT}`);
+    }
 
     // Connecting to database
     await this.container.db.connect(DB_HOST, DB_PORT, DB_NAME);
