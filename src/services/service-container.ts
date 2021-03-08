@@ -11,6 +11,7 @@ import LogService from './log-service';
 import SchedulerService from './scheduler-service';
 import ServerService from './server-service';
 import TokenService from './token-service';
+import WebsocketService from './websocket-service';
 
 /**
  * Services container class.
@@ -49,6 +50,7 @@ export default class ServiceContainer {
   private _errors: ErrorService;
   private _cache: CacheService;
   private _scheduler: SchedulerService;
+  private _websocket: WebsocketService;
 
   /**
    * Creates a new services container.
@@ -67,6 +69,7 @@ export default class ServiceContainer {
     this._errors = null;
     this._cache = null;
     this._scheduler = null;
+    this._websocket = null;
     this.env.load(); // Autoload environment
   }
 
@@ -172,5 +175,13 @@ export default class ServiceContainer {
       this.log.info('Loaded scheduler service');
     }
     return this._scheduler;
+  }
+
+  public get websocket(): WebsocketService {
+    if (!this._websocket) {
+      this._websocket = new WebsocketService(this);
+      this.log.info('Loaded websocket service');
+    }
+    return this._websocket;
   }
 }
