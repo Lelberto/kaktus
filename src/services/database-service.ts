@@ -27,13 +27,11 @@ export default class DatabaseService extends Service {
   /**
    * Connects to a database.
    * 
-   * @param host Host
-   * @param port Port
-   * @param dbName Database name
+   * @param url URL (example : `mongodb://database.com:27017/collection`)
    * @async
    */
-  public async connect(host: string, port: string | number, dbName: string): Promise<void> {
-    await this.mongoose.connect(`mongodb://${host}:${port}/${dbName}`, {
+  public async connect(url: string): Promise<void> {
+    await this.mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
