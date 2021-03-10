@@ -6,6 +6,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
+    "@meanie/mongoose-to-json": "^2.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto-random-string": "^3.1.0",
@@ -18,6 +19,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.8.11",
     "node-cache": "^5.1.0",
+    "socket.io": "^3.1.2",
     "swagger-ui-express": "^4.1.4",
     "typescript": "^4.0.5",
     "yaml": "^1.7.2"
@@ -36,6 +38,7 @@
     "@types/mongoose": "^5.7.0",
     "@types/node": "^13.7.0",
     "@types/node-cache": "^4.2.5",
+    "@types/socket.io": "^2.1.13",
     "@types/swagger-ui-express": "^4.1.2",
     "@types/yaml": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
