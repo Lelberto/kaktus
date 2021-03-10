@@ -13,5 +13,8 @@
   "ts-node": {
     "files": true
   },
-  "files": ["types/nodejs.d.ts"]
+  "files": [
+    "types/modules.d.ts",
+    "types/nodejs.d.ts"
+  ]
 }
