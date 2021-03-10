@@ -76,7 +76,7 @@ export default class ExpressService extends Service {
     // Security
     app.use(express.urlencoded({
       extended: true,
-      limit: this.container.config.api.requestSizeLimit
+      limit: this.container.config.services.express.requestSizeLimit
     }));
     app.use(express.json());
     app.use(helmet());
@@ -108,7 +108,7 @@ export default class ExpressService extends Service {
 
     // handler used when no endpoint matches
     app.all('*', (req, res) => {
-      return res.status(404).json({ error: `Unknown endpoint ${req.method} ${req.originalUrl}` });
+      return res.status(404).json(this.container.errors.formatErrors({ error: 'not_found', error_description: `Unknown endpoint ${req.method} ${req.originalUrl}` }));
     });
 
     return app;

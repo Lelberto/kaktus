@@ -6,3 +6,5 @@ cache:
   ttl: 300
   checkPeriod: 600
   useClones: false
+express:
+  requestSizeLimit: 50mb
