@@ -37,7 +37,7 @@ export default class ServerService extends Service {
 
     // Connecting to database
     await this.container.db.connect(DB_URL);
-    this.logger.info(`Connected to database ${DB_URL}`);
+    this.logger.info(`Connected to database "${DB_URL}"`);
   }
 
   /**
