@@ -37,7 +37,8 @@ export default class UserController extends Controller {
     try {
       return res.status(200).send({ users: await this.db.users.find() });
     } catch (err) {
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      this.logger.error(err);
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 
@@ -62,7 +63,7 @@ export default class UserController extends Controller {
       return res.status(200).send({ user });
     } catch (err) {
       this.logger.error(err);
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 
@@ -79,7 +80,7 @@ export default class UserController extends Controller {
     try {
       const user = await this.db.users.create({
         email: req.body.email,
-        name: req.body.name.name.name,
+        name: req.body.name,
         password: req.body.password
       });
       return res.status(201).send({
@@ -95,7 +96,7 @@ export default class UserController extends Controller {
       if (err.name === 'ValidationError') {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 
@@ -134,7 +135,7 @@ export default class UserController extends Controller {
       if (err.name === 'ValidationError') {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 
@@ -179,7 +180,7 @@ export default class UserController extends Controller {
       if (err.name === 'ValidationError') {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 
@@ -204,7 +205,7 @@ export default class UserController extends Controller {
       return res.status(204).send();
     } catch (err) {
       this.logger.error(err);
-      return res.status(500).send(this.container.errors.formatServerError(err));
+      return res.status(500).send(this.container.errors.formatServerError());
     }
   }
 }
