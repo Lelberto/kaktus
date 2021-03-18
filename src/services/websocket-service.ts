@@ -54,12 +54,12 @@ export default class WebsocketService extends Service {
    */
   private createEvents(): void {
     this.srv.on('connect', (socket: Socket) => {
-      this.container.log.info(`Websocket connected : ${socket.handshake.address}`);
+      this.logger.info(`Websocket connected : ${socket.handshake.address}`);
 
       // When the socket disconnects
       socket.on('disconnect', () => {
           socket.rooms.forEach(socket.leave);
-          this.container.log.info(`Websocket disconnected : ${socket.handshake.address}`);
+          this.logger.info(`Websocket disconnected : ${socket.handshake.address}`);
       });
 
       // Websocket logic here

@@ -19,7 +19,7 @@ export default abstract class Component {
    * Alias for `this.container.log`
    */
   protected get logger(): LogService {
-      return this.container.log;
+      return this.container.logger;
   }
 
   /**
