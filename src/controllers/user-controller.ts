@@ -82,6 +82,7 @@ export default class UserController extends Controller {
         name: req.body.name.name.name,
         password: req.body.password
       });
+      res.setHeader('Location', `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`);
       return res.status(201).send({
         id: user.id,
         links: [{
@@ -121,6 +122,7 @@ export default class UserController extends Controller {
       user.name = req.body.name;
       user.password = req.body.password;
       await user.save();
+      res.setHeader('Location', `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`);
       return res.status(200).send({
         id: user.id,
         links: [{
@@ -166,6 +168,7 @@ export default class UserController extends Controller {
         user.password = req.body.password;
       }
       await user.save();
+      res.setHeader('Location', `${req.protocol}://${req.get('host')}${this.rootUri}/${user.id}`);
       return res.status(200).send({
         id: user.id,
         links: [{
