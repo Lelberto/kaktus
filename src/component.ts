@@ -11,6 +11,11 @@ export default abstract class Component {
 
   protected readonly container: ServiceContainer;
 
+  /**
+   * Creates a new component.
+   * 
+   * @param container Services container
+   */
   public constructor(container: ServiceContainer) {
     this.container = container;
   }
