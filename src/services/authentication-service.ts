@@ -24,6 +24,9 @@ export default class AuthenticationService extends Service {
    * 
    * A token must be provided in the request header `x-access-token`. If the token is valid, the user is stored into `res.locals.authUser`.
    * 
+   * Note : This handler works even if no token is provided. To block the request, use `isAuthenticatedHandler` after this handler to send an error when authentication
+   * is invalid.
+   * 
    * This method is a handler.
    * 
    * @param req Express request
@@ -50,7 +53,7 @@ export default class AuthenticationService extends Service {
   /**
    * Checks if an user is authenticated.
    * 
-   * If the user is not authenticated, this returns an error with code 403.
+   * If the user is not authenticated, this returns an error with code 401.
    * 
    * This method is a handler.
    * 
@@ -59,7 +62,7 @@ export default class AuthenticationService extends Service {
    * @param next Next handler
    */
   public async isAuthenticatedHandler(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    return res.locals.authUser ? next() : res.status(403).json(this.container.errors.formatErrors({
+    return res.locals.authUser ? next() : res.status(401).json(this.container.errors.formatErrors({
       error: 'access_denied',
       error_description: 'Not authenticated'
     }));
