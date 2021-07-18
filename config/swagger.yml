@@ -12,9 +12,99 @@ servers:
   - url: "https://api.example.com/server1"
   - url: "https://api.example.com/server2"
 tags:
+  - name: auth
+    description: Authentication
   - name: users
     description: Access to users
 paths:
+  /auth/accessToken:
+    post:
+      tags:
+        - auth
+      summary: Access token generation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Access token generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '404':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+  /auth/refreshToken:
+    post:
+      tags:
+        - auth
+      summary: Refresh token and access token generation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Refresh token and access token generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Link"
+        '404':
+          description: Email not found or invalid password
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
   /users:
     get:
       tags:
@@ -29,6 +119,60 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+    post:
+      tags:
+        - users
+      summary: Creates a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Link"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIError"
         "500":
           description: Server error
           content:

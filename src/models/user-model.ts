@@ -1,5 +1,5 @@
 import { Document, Model, Mongoose, Schema } from 'mongoose';
-import mongooseToJson from '@meanie/mongoose-to-json';
+const mongooseToJson = require('@meanie/mongoose-to-json');
 import ServiceContainer from '../services/service-container';
 import Attributes from './model';
 
@@ -35,7 +35,7 @@ export default function createModel(container: ServiceContainer, mongoose: Mongo
  * @returns User schema
  */
 function createUserSchema(container: ServiceContainer) {
-  const schema = new Schema({
+  const schema = new Schema<UserInstance>({
     email: {
       type: Schema.Types.String,
       required: [true, 'Email is required'],
