@@ -6,15 +6,9 @@
     "outDir": "build/",
     "sourceMap": true,
     "esModuleInterop": true,
-    "typeRoots": ["types/"],
+    "typeRoots": ["src/types"],
     "strict": true,
-    "strictNullChecks": false
-  },
-  "ts-node": {
-    "files": true
-  },
-  "files": [
-    "types/modules.d.ts",
-    "types/nodejs.d.ts"
-  ]
+    "strictNullChecks": false,
+    "allowJs": true
+  }
 }
