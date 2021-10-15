@@ -1,4 +1,6 @@
 import { Server, Socket } from 'socket.io';
+import DisconnectWebSocket from '../websockets/disconnect-websocket';
+import Websocket from '../websockets/websocket';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -10,6 +12,7 @@ import ServiceContainer from './service-container';
 export default class WebsocketService extends Service {
 
   private srv: Server;
+  private readonly websockets: Websocket[];
 
   /**
    * Creates a new websocket service.
@@ -19,6 +22,9 @@ export default class WebsocketService extends Service {
   public constructor(container: ServiceContainer) {
     super(container);
     this.srv = null;
+    this.websockets = [
+      new DisconnectWebSocket(container)
+    ];
   }
 
   /**
@@ -55,14 +61,10 @@ export default class WebsocketService extends Service {
   private createEvents(): void {
     this.srv.on('connect', (socket: Socket) => {
       this.logger.info(`Websocket connected : ${socket.handshake.address}`);
-
-      // When the socket disconnects
-      socket.on('disconnect', () => {
-          socket.rooms.forEach(socket.leave);
-          this.logger.info(`Websocket disconnected : ${socket.handshake.address}`);
+      this.websockets.forEach(websocket => {
+        websocket.createEvents(this.srv, socket);
+        this.logger.info('Registered websocket', websocket.constructor.name);
       });
-
-      // Websocket logic here
     });
   }
 }
