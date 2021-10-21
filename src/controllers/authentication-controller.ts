@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { UserInstance } from '../models/user-model';
 import ServiceContainer from '../services/service-container';
 import { AccessTokenData, RefreshTokenData } from '../services/token-service';
 import Controller from './controller';
@@ -31,17 +32,18 @@ export default class AuthenticationController extends Controller {
    */
   public async accessToken(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.db.users.findOne({ refreshToken: req.body.refresh_token });
-      if (user == null) {
+      const tokenData = await this.container.tokens.decode<RefreshTokenData>(req.body.refresh_token, process.env.REFRESH_TOKEN_KEY);
+      const user = await this.db.users.findById(tokenData.userId).select('+refreshToken');
+      if (user == null || user.refreshToken !== req.body.refresh_token) {
         return res.status(404).json(this.container.errors.formatErrors({
           error: 'access_denied',
           error_description: 'Invalid refresh token'
         }));
       }
-      const accessToken = await this.container.tokens.encode<AccessTokenData>({ userId: user.id }, process.env.ACCESS_TOKEN_KEY, {
-        expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRATION, 10)
-      });
-      return res.status(200).json({ access_token: accessToken });
+      const { accessToken, refreshToken } = await this.generateTokens(user);
+      user.refreshToken = refreshToken;
+      await user.save();
+      return res.status(200).json({ access_token: accessToken, refresh_token: refreshToken });
     } catch (err) {
       this.logger.error(err);
       return res.status(500).json(this.container.errors.formatServerError());
@@ -73,12 +75,7 @@ export default class AuthenticationController extends Controller {
           error_description: 'Incorrect password'
         }));
       }
-      const accessToken = await this.container.tokens.encode<AccessTokenData>({ userId: user.id }, process.env.ACCESS_TOKEN_KEY, {
-        expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRATION, 10)
-      });
-      const refreshToken = await this.container.tokens.encode<RefreshTokenData>({ userId: user.id }, process.env.REFRESH_TOKEN_KEY, {
-        expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRATION, 10)
-      });
+      const { accessToken, refreshToken } = await this.generateTokens(user);
       user.refreshToken = refreshToken;
       await user.save();
       return res.status(200).json({ access_token: accessToken, refresh_token: refreshToken });
@@ -86,5 +83,21 @@ export default class AuthenticationController extends Controller {
       this.logger.error(err);
       return res.status(500).json(this.container.errors.formatServerError());
     }
+  }
+
+  /**
+   * Generates access and refresh tokens for an user.
+   * 
+   * @param user User
+   * @returns Access and refresh tokens for the provided user
+   */
+  private async generateTokens(user: UserInstance): Promise<{ accessToken: string, refreshToken: string }> {
+    const accessToken = await this.container.tokens.encode<AccessTokenData>({ userId: user.id }, process.env.ACCESS_TOKEN_KEY, {
+      expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRATION, 10)
+    });
+    const refreshToken = await this.container.tokens.encode<RefreshTokenData>({ userId: user.id }, process.env.REFRESH_TOKEN_KEY, {
+      expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRATION, 10)
+    });
+    return { accessToken, refreshToken };
   }
 }
