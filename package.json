@@ -7,7 +7,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@meanie/mongoose-to-json": "^2.5.0",
+    "@meanie/mongoose-to-json": "^2.6.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto-random-string": "^3.1.0",
