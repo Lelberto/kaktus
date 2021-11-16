@@ -1,10 +1,10 @@
 {
-  "exports": "./build/app.js",
+  "main": "build/app.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "ts-node-dev -P tsconfig.json --respawn --quiet --clear ./src/app.ts",
     "start": "node build/app.js",
-    "build": "tsc",
-    "lint": "eslint . --ext .ts"
+    "build": "tsc -P tsconfig.json",
+    "lint": "eslint src/** --ext .ts"
   },
   "dependencies": {
     "@meanie/mongoose-to-json": "^2.6.0",
@@ -36,21 +36,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",
-    "nodemon": "^2.0.15",
-    "ts-node": "^10.4.0"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.test.ts",
-      "**/*.spec.ts",
-      ".git",
-      "node_modules"
-    ],
-    "watch": [
-      "src",
-      "config"
-    ],
-    "exec": "node --loader ts-node/esm ./src/app.ts",
-    "ext": "ts"
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.4"
   }
 }
