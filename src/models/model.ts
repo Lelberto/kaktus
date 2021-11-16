@@ -1,9 +1,9 @@
 import { Schema } from 'mongoose';
 
 /**
- * Base model attributes.
+ * Timestamps attributes.
  */
-export default interface Attributes {
+export default interface Timestamps {
   createdAt?: Date;
   updatedAt?: Date;
 }

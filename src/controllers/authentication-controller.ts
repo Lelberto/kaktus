@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserInstance } from '../models/user-model';
+import { UserDocument } from '../models/user-model';
 import ServiceContainer from '../services/service-container';
 import { AccessTokenData, RefreshTokenData } from '../services/token-service';
 import Controller from './controller';
@@ -91,7 +91,7 @@ export default class AuthenticationController extends Controller {
    * @param user User
    * @returns Access and refresh tokens for the provided user
    */
-  private async generateTokens(user: UserInstance): Promise<{ accessToken: string, refreshToken: string }> {
+  private async generateTokens(user: UserDocument): Promise<{ accessToken: string, refreshToken: string }> {
     const accessToken = await this.container.tokens.encode<AccessTokenData>({ userId: user.id }, process.env.ACCESS_TOKEN_KEY, {
       expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRATION, 10)
     });

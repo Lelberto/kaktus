@@ -38,22 +38,21 @@ export default class LogService extends Service {
     const prefix = `[${datetimeFormat} - ${severity}]`;
     switch (severity) {
       default:
-        console.log(prefix, ...msg);
+        this.write(console.log, dateFormat, prefix, ...msg);
         break;
       case 'INFO':
-        console.info(prefix, ...msg);
+        this.write(console.info, dateFormat, prefix, ...msg);
         break;
       case 'WARN':
-        console.warn(prefix, ...msg);
+        this.write(console.warn, dateFormat, prefix, ...msg);
         break;
       case 'ERROR':
-        console.error(prefix, ...msg);
+        this.write(console.error, dateFormat, prefix, ...msg);
         break;
       case 'DEBUG':
-        console.debug(prefix, ...msg);
+        this.write(console.debug, dateFormat, prefix, ...msg);
         break;
     }
-    this.write(dateFormat, prefix, ...msg);
   }
 
   /**
@@ -93,16 +92,28 @@ export default class LogService extends Service {
   }
 
   /**
+   * Stringifies the given data to avoid `[Object object]` values in log.
+   * 
+   * @param data Data to stringify
+   * @returns Stringified data
+   */
+  public stringify(...data: unknown[]): string {
+    return data.map(part => part instanceof Object ? `\n${JSON.stringify(part, null, this.container.config.services.log.jsonIndent)}` : part).join(' ')
+  }
+
+  /**
    * Write a log message to the specified log file.
    * 
+   * @param logFc Logging function (eg: console.log, console.info, console.error, ...)
    * @param dateFormat Date format for the file name
    * @param msg Log message
    */
-  private write(dateFormat: string, ...msg: unknown[]): void {
+  private write(logFc: (...msg: unknown[]) => void, dateFormat: string, ...msg: unknown[]): void {
     if (!fs.existsSync('logs')) {
       fs.mkdirSync('logs');
     }
-    const fullMsg = msg.map(part => part instanceof Object ? `\n${JSON.stringify(part, null, this.container.config.services.log.jsonIndent)}` : part).join(' ');
+    const fullMsg = this.stringify(...msg);
+    logFc(fullMsg);
     fs.appendFileSync(`logs/logs_${dateFormat}.log`, `${fullMsg}\n`);
   }
 }
