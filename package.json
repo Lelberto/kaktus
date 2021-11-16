@@ -32,7 +32,6 @@
     "@types/express-mung": "^0.5.2",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/lodash": "^4.14.177",
-    "@types/moment": "^2.13.0",
     "@types/node": "^13.7.0",
     "@types/node-cache": "^4.2.5",
     "@types/socket.io": "^2.1.13",
