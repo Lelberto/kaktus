@@ -1,5 +1,5 @@
 {
-  "exports": "./build/app.js",
+  "main": "build/app.js",
   "scripts": {
     "dev": "ts-node-dev -P tsconfig.json --respawn --quiet --clear ./src/app.ts",
     "start": "node build/app.js",
