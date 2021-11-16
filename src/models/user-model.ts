@@ -1,12 +1,12 @@
 import { Document, Model, Mongoose, Schema } from 'mongoose';
 const mongooseToJson = require('@meanie/mongoose-to-json');
 import ServiceContainer from '../services/service-container';
-import Attributes from './model';
+import Timestamps from './model';
 
 /**
  * User attributes.
  */
-export interface UserAttributes extends Attributes {
+export interface User extends Timestamps {
   email: string;
   name: string;
   password: string;
@@ -14,9 +14,15 @@ export interface UserAttributes extends Attributes {
 }
 
 /**
- * User instance.
+ * User document.
  */
-export interface UserInstance extends UserAttributes, Document {}
+export interface UserDocument extends User, Document {}
+
+/**
+ * User model.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface UserModel extends Model<UserDocument> {}
 
 /**
  * Creates the user model.
@@ -24,8 +30,8 @@ export interface UserInstance extends UserAttributes, Document {}
  * @param container Services container
  * @param mongoose Mongoose instance
  */
-export default function createModel(container: ServiceContainer, mongoose: Mongoose): Model<UserInstance> {
-  return mongoose.model('User', createUserSchema(container), 'users');
+export default function createModel(container: ServiceContainer, mongoose: Mongoose): UserModel {
+  return mongoose.model<UserDocument, UserModel>('User', createUserSchema(container), 'users');
 }
 
 /**
@@ -35,7 +41,7 @@ export default function createModel(container: ServiceContainer, mongoose: Mongo
  * @returns User schema
  */
 function createUserSchema(container: ServiceContainer) {
-  const schema = new Schema<UserInstance>({
+  const schema = new Schema<UserDocument, UserModel>({
     email: {
       type: Schema.Types.String,
       required: [true, 'Email is required'],
@@ -47,8 +53,7 @@ function createUserSchema(container: ServiceContainer) {
     },
     name: {
       type: Schema.Types.String,
-      required: [true, 'Name is required'],
-      unique: [true, 'Name already exists']
+      required: [true, 'Name is required']
     },
     password: {
       type: Schema.Types.String,
@@ -68,13 +73,13 @@ function createUserSchema(container: ServiceContainer) {
   });
 
   // Password hash validation
-  schema.pre('save', async function (this: UserInstance, next) {
+  schema.pre('save', async function (this: UserDocument, next) {
     if (this.password != null && (this.isNew || this.isModified('password'))) { // Validates the password only if filled
       try {
         this.password = await container.crypto.hash(this.password, parseInt(process.env.HASH_SALT, 10));
         return next();
       } catch (err) {
-        return next(err);
+        return next(err as Error);
       }
     }
   });

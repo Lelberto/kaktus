@@ -44,7 +44,7 @@ export default class AuthenticationService extends Service {
           res.locals.authUser = user;
         }
       } catch (err) {
-        this.logger.error('Could not authenticate :', err.message);
+        this.logger.error('Could not authenticate :', (err as Error).message);
       }
     }
     return next();
