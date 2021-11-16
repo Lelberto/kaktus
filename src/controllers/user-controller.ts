@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { UserInstance } from '../models/user-model';
+import { Error as MongooseError } from 'mongoose';
+import { UserDocument } from '../models/user-model';
 import ServiceContainer from '../services/service-container';
 import Controller, { Link } from './controller';
 
@@ -37,7 +38,7 @@ export default class UserController extends Controller {
    */
   public async infoHandler(req: Request, res: Response): Promise<Response> {
     try {
-      const authUser: UserInstance = res.locals.authUser;
+      const authUser: UserDocument = res.locals.authUser;
       if (authUser == null) {
         return res.status(404).json(this.container.errors.formatErrors({
           error: 'not_found',
@@ -120,7 +121,7 @@ export default class UserController extends Controller {
       });
     } catch (err) {
       this.logger.error(err);
-      if (err.name === 'ValidationError') {
+      if (err instanceof MongooseError.ValidationError) {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
       return res.status(500).send(this.container.errors.formatServerError());
@@ -160,7 +161,7 @@ export default class UserController extends Controller {
       });
     } catch (err) {
       this.logger.error(err);
-      if (err.name === 'ValidationError') {
+      if (err instanceof MongooseError.ValidationError) {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
       return res.status(500).send(this.container.errors.formatServerError());
@@ -206,7 +207,7 @@ export default class UserController extends Controller {
       });
     } catch (err) {
       this.logger.error(err);
-      if (err.name === 'ValidationError') {
+      if (err instanceof MongooseError.ValidationError) {
         return res.status(400).send(this.container.errors.formatErrors(...this.container.errors.translateMongooseValidationError(err)));
       }
       return res.status(500).send(this.container.errors.formatServerError());

@@ -1,5 +1,5 @@
-import { Model, Mongoose } from 'mongoose';
-import createUserModel, { UserInstance } from '../models/user-model';
+import { Mongoose } from 'mongoose';
+import createUserModel, { UserModel } from '../models/user-model';
 import Service from './service';
 import ServiceContainer from './service-container';
 
@@ -10,7 +10,7 @@ import ServiceContainer from './service-container';
  */
 export default class DatabaseService extends Service {
 
-  public readonly users: Model<UserInstance>;
+  public readonly users: UserModel;
   private readonly mongoose: Mongoose;
 
   /**
@@ -31,10 +31,7 @@ export default class DatabaseService extends Service {
    * @async
    */
   public async connect(url: string): Promise<void> {
-    await this.mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await this.mongoose.connect(url);
   }
 
   /**
@@ -53,7 +50,9 @@ export default class DatabaseService extends Service {
    */
   private createMongoose(): Mongoose {
     const mongoose = new Mongoose();
-    mongoose.set('useCreateIndex', true);
+    if (this.container.env.nodeEnv === 'development') {
+      mongoose.set('debug', (collName, methodName, ...methodArgs) => this.logger.debug('Mongoose :', `${collName}.${methodName}(${methodArgs.map(arg => this.logger.stringify(arg)).join(', ')})`));
+    }
     return mongoose;
   }
 }
