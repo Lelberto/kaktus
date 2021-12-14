@@ -17,5 +17,6 @@ For development
 $ npm run dev
 
 For production
-$ npm run build && npm start
+$ npm run build
+$ npm start
 ```
