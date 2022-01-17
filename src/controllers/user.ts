@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
-import { UserDocument } from '../models/user-model';
+import { UserDocument } from '../models/user';
 import ServiceContainer from '../services/service-container';
 import Controller, { Link } from './controller';
 

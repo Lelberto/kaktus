@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Service from './service';
 import ServiceContainer from './service-container';
-import { AccessTokenData } from './token-service';
+import { AccessTokenData } from './token';
 
 /**
  * Authentication service class.

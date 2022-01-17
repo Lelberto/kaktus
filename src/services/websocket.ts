@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import DisconnectWebSocket from '../websockets/disconnect-websocket';
+import DisconnectWebSocket from '../websockets/disconnect';
 import Websocket from '../websockets/websocket';
 import Service from './service';
 import ServiceContainer from './service-container';
