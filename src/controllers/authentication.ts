@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { UserDocument } from '../models/user-model';
+import { UserDocument } from '../models/user';
 import ServiceContainer from '../services/service-container';
-import { AccessTokenData, RefreshTokenData } from '../services/token-service';
+import { AccessTokenData, RefreshTokenData } from '../services/token';
 import Controller from './controller';
 
 /**

@@ -1,7 +1,7 @@
 import { Application } from 'express';
-import AuthenticationController from '../controllers/authentication-controller';
+import AuthenticationController from '../controllers/authentication';
 import Controller from '../controllers/controller';
-import UserController from '../controllers/user-controller';
+import UserController from '../controllers/user';
 import Service from './service';
 import ServiceContainer from './service-container';
 

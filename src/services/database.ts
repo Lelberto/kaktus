@@ -1,5 +1,5 @@
 import { Mongoose } from 'mongoose';
-import createUserModel, { UserModel } from '../models/user-model';
+import createUserModel, { UserModel } from '../models/user';
 import Service from './service';
 import ServiceContainer from './service-container';
 
