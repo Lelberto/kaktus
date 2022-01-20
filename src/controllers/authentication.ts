@@ -18,8 +18,8 @@ export default class AuthenticationController extends Controller {
    */
   public constructor(container: ServiceContainer) {
     super(container, '/auth');
-    this.registerEndpoint({ method: 'POST', uri: '/accessToken', handlers: this.accessToken });
-    this.registerEndpoint({ method: 'POST', uri: '/refreshToken', handlers: this.refreshToken });
+    this.registerEndpoint({ method: 'POST', uri: '/accessToken', handlers: this.accessTokenHandler });
+    this.registerEndpoint({ method: 'POST', uri: '/refreshToken', handlers: this.refreshTokenHandler });
   }
 
   /**
@@ -30,7 +30,7 @@ export default class AuthenticationController extends Controller {
    * @param req Express request
    * @param res Express response
    */
-  public async accessToken(req: Request, res: Response): Promise<Response> {
+  public async accessTokenHandler(req: Request, res: Response): Promise<Response> {
     try {
       const tokenData = await this.container.tokens.decode<RefreshTokenData>(req.body.refresh_token, process.env.REFRESH_TOKEN_KEY);
       const user = await this.db.users.findById(tokenData.userId).select('+refreshToken');
@@ -60,7 +60,7 @@ export default class AuthenticationController extends Controller {
    * @param req Express request
    * @param res Express response
    */
-  public async refreshToken(req: Request, res: Response): Promise<Response> {
+  public async refreshTokenHandler(req: Request, res: Response): Promise<Response> {
     try {
       const user = await this.db.users.findOne({ email: req.body.email }).select('+password');
       if (user == null) {
