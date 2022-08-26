@@ -18,7 +18,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
-    "mongoose": "^6.0.13",
+    "mongoose": "^6.4.6",
     "node-cache": "^5.1.2",
     "socket.io": "^4.3.2",
     "swagger-ui-express": "^4.1.6",
